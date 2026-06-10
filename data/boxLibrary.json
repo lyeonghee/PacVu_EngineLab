@@ -20,6 +20,7 @@
         "engineKey":"bbox",
         "variantKey":"default",
         "defaultDims":{ "W":57, "D":57, "H":177 }
+     
       }
     ]
   },
