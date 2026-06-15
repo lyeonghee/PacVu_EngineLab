@@ -1,7 +1,7 @@
 // ============================================================
 // app.js — PacVu Engine Lab
 // UI 바인딩 + State + Render loop
-// Engine dispatch: gbox -> M001, bbox -> T001, bbox_v2 -> T001 v2, rbox -> R001
+// Engine dispatch: gbox -> M001, bbox -> T001, rbox -> R001
 // ============================================================
 
 // ============================================================
@@ -78,6 +78,30 @@ function getCfgR001() {
   };
 }
 
+function getCfgR002() {
+  return {
+    W: val('baseW', 425),
+    D: val('baseD', 335),
+    H: val('panelH', 103)
+  };
+}
+
+function getCfgM002() {
+  return {
+    W: val('baseW', 400),
+    D: val('baseD', 308),
+    H: val('panelH', 80)
+  };
+}
+
+function getCfgR003() {
+  return {
+    W: val('baseW', 350),
+    D: val('baseD', 230),
+    H: val('panelH', 220)
+  };
+}
+
 // ============================================================
 // DIMENSION VALIDATE (M001용)
 // ============================================================
@@ -137,18 +161,26 @@ function render(forceFit = false) {
     validateDimensions(cfg.W, cfg.D, cfg.H);
     svgStr = M001_renderSVG(cfg, state);
 
+  } else if (eng === 'gbox2') {
+    const cfg = getCfgM002();
+    svgStr = M002_renderSVG(cfg, state);
+
   } else if (eng === 'bbox') {
     const c = getCfgT001();
     svgStr = T001_renderSVG(c, state);
-
-  } else if (eng === 'bbox_v2') {
-    const c = getCfgT001();
-    svgStr = T001_v2_renderSVG(c, state);
 
   } else if (eng === 'rbox') {
     // ── R001 A-Type RSC ──────────────────────────────────────
     const c = getCfgR001();
     svgStr = R001_renderSVG(c, state);
+
+  } else if (eng === 'rbox2') {
+    const c = getCfgR002();
+    svgStr = R002_renderSVG(c, state);
+
+  } else if (eng === 'rbox3') {
+    const c = getCfgR003();
+    svgStr = R003_renderSVG(c, state);
 
   } else {
     // 준비 중
@@ -220,18 +252,26 @@ function fitToScreen() {
         buildOuterPath(c, g2), buildFoldLines(c, g2),
         buildSlots(c, g2), buildHoles(c, g2)
       );
+    } else if (eng === 'gbox2') {
+      const c = getCfgM002();
+      const layout = M002_getLayout(c.W, c.D, c.H);
+      bounds = layout.bounds;
     } else if (eng === 'bbox') {
       const c = getCfgT001();
       const layout = T001_getLayout(c.W, c.D, c.H);
-      bounds = layout.bounds;
-    } else if (eng === 'bbox_v2') {
-      const c = getCfgT001();
-      const layout = T001_v2_getLayout(c.W, c.D, c.H);
       bounds = layout.bounds;
     } else if (eng === 'rbox') {
       // ── R001 bounds ─────────────────────────────────────────
       const c = getCfgR001();
       const layout = R001_getLayout(c.W, c.D, c.H);
+      bounds = layout.bounds;
+    } else if (eng === 'rbox2') {
+      const c = getCfgR002();
+      const layout = R002_getLayout(c.W, c.D, c.H);
+      bounds = layout.bounds;
+    } else if (eng === 'rbox3') {
+      const c = getCfgR003();
+      const layout = R003_getLayout(c.W, c.D, c.H);
       bounds = layout.bounds;
     } else {
       bounds = { minX:0, minY:0, width:400, height:200 };
@@ -279,18 +319,52 @@ function zoomAt(nextZoom) {
 // EXPORT SVG / DXF
 // ============================================================
 function buildExportSVG(cfg, eng) {
-  if (eng === 'gbox') return M001_buildExportSVG ? M001_buildExportSVG(cfg) : '';
-  if (eng === 'bbox') return T001_buildExportSVG ? T001_buildExportSVG(cfg) : '';
-  if (eng === 'bbox_v2') return typeof T001_v2_buildExportSVG === 'function' ? T001_v2_buildExportSVG(cfg) : '';
-  if (eng === 'rbox') return R001_buildExportSVG ? R001_buildExportSVG(cfg) : '';
+  if (eng === 'gbox') {
+    return typeof window.M001_buildExportSVG === 'function'
+      ? window.M001_buildExportSVG(cfg)
+      : '';
+  }
+
+  if (eng === 'gbox2') {
+    return typeof M002_buildExportSVG === 'function'
+      ? M002_buildExportSVG(cfg)
+      : '';
+  }
+
+  if (eng === 'bbox') {
+    return typeof T001_buildExportSVG === 'function'
+      ? T001_buildExportSVG(cfg)
+      : '';
+  }
+
+  if (eng === 'rbox') {
+    return typeof R001_buildExportSVG === 'function'
+      ? R001_buildExportSVG(cfg)
+      : '';
+  }
+
+  if (eng === 'rbox2') {
+    return typeof R002_buildExportSVG === 'function'
+      ? R002_buildExportSVG(cfg)
+      : '';
+  }
+
+  if (eng === 'rbox3') {
+    return typeof R003_buildExportSVG === 'function'
+      ? R003_buildExportSVG(cfg)
+      : '';
+  }
+
   return '';
 }
 
 function buildDXF(cfg, eng) {
   if (eng === 'gbox') return typeof buildDXF_M001 === 'function' ? buildDXF_M001(cfg) : '';
-  if (eng === 'bbox') return T001_buildDXF ? T001_buildDXF(cfg) : '';
-  if (eng === 'bbox_v2') return typeof T001_v2_buildDXF === 'function' ? T001_v2_buildDXF(cfg) : '';
-  if (eng === 'rbox') return R001_buildDXF ? R001_buildDXF(cfg) : '';
+  if (eng === 'gbox2') return typeof M002_buildDXF === 'function' ? M002_buildDXF(cfg) : '';
+  if (eng === 'bbox') return typeof T001_buildDXF === 'function' ? T001_buildDXF(cfg) : '';
+  if (eng === 'rbox') return typeof R001_buildDXF === 'function' ? R001_buildDXF(cfg) : '';
+  if (eng === 'rbox2') return typeof R002_buildDXF === 'function' ? R002_buildDXF(cfg) : '';
+  if (eng === 'rbox3') return typeof R003_buildDXF === 'function' ? R003_buildDXF(cfg) : '';
   return '';
 }
 
@@ -403,22 +477,46 @@ function bindAll() {
 
   get('downloadSvgBtn')?.addEventListener('click', () => {
     const eng = selectedBoxMeta.engineKey;
-    const cfg = eng === 'bbox' || eng === 'bbox_v2' ? getCfgT001()
-              : eng === 'rbox' ? getCfgR001()
-              : getCfg();
+    const cfg = eng === 'gbox' ? getCfg()
+      : eng === 'gbox2' ? getCfgM002()
+      : eng === 'bbox' ? getCfgT001()
+      : eng === 'rbox' ? getCfgR001()
+      : eng === 'rbox2' ? getCfgR002()
+      : eng === 'rbox3' ? getCfgR003()
+      : getCfg();
+
     const dim  = `${cfg.W}x${cfg.D}x${cfg.H}`;
     const name = `PacVu_${eng}_${dim}mm.svg`;
-    downloadFile(name, buildExportSVG(cfg, eng), 'image/svg+xml');
+    const svgOut = buildExportSVG(cfg, eng);
+
+    if (!svgOut || !svgOut.trim()) {
+      console.warn('[SVG export empty]', { eng, cfg });
+      return;
+    }
+
+    downloadFile(name, svgOut, 'image/svg+xml');
   });
 
   get('downloadDxfBtn')?.addEventListener('click', () => {
     const eng = selectedBoxMeta.engineKey;
-    const cfg = eng === 'bbox' || eng === 'bbox_v2' ? getCfgT001()
-              : eng === 'rbox' ? getCfgR001()
-              : getCfg();
+    const cfg = eng === 'gbox' ? getCfg()
+      : eng === 'gbox2' ? getCfgM002()
+      : eng === 'bbox' ? getCfgT001()
+      : eng === 'rbox' ? getCfgR001()
+      : eng === 'rbox2' ? getCfgR002()
+      : eng === 'rbox3' ? getCfgR003()
+      : getCfg();
+
     const dim  = `${cfg.W}x${cfg.D}x${cfg.H}`;
     const name = `PacVu_${eng}_${dim}mm.dxf`;
-    downloadFile(name, buildDXF(cfg, eng), 'application/dxf');
+    const dxfOut = buildDXF(cfg, eng);
+
+    if (!dxfOut || !dxfOut.trim()) {
+      console.warn('[DXF export empty]', { eng, cfg });
+      return;
+    }
+
+    downloadFile(name, dxfOut, 'application/dxf');
   });
 
   const sidebar = get('sidebar');
