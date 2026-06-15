@@ -20,14 +20,7 @@
         "engineKey":"bbox",
         "variantKey":"default",
         "defaultDims":{ "W":57, "D":57, "H":177 }
-      },
-      {
-        "label":"B-Type T001 v2 / cutPath + foldLine",
-        "koreanName":"B형 타입 T001 v2",
-        "fefcoCode":"0471",
-        "engineKey":"bbox_v2",
-        "variantKey":"first-pass",
-        "defaultDims":{ "W":57, "D":57, "H":177 }
+     
       }
     ]
   },
@@ -50,6 +43,14 @@
         "engineKey":"gbox",
         "variantKey":"lock",
         "defaultDims":{ "W":235, "D":229, "H":91 }
+      },
+      {
+        "label":"G-style Mailer Box 2",
+        "koreanName":"G-style M002",
+        "fefcoCode":"0427",
+        "engineKey":"gbox2",
+        "variantKey":"M002",
+        "defaultDims":{ "W":400, "D":308, "H":80 }
       }
     ]
   },
@@ -82,6 +83,22 @@
         "engineKey":"rbox",
         "variantKey":"default",
         "defaultDims":{ "W":285, "D":170, "H":120 }
+      },
+      {
+        "label":"RSC 택배박스2",
+        "koreanName":"A형 타입 RSC 택배박스2",
+        "fefcoCode":"0201",
+        "engineKey":"rbox2",
+        "variantKey":"R002",
+        "defaultDims":{ "W":425, "D":335, "H":103 }
+      },
+      {
+        "label":"RSC 택배박스3",
+        "koreanName":"A형 타입 RSC 택배박스3",
+        "fefcoCode":"0201",
+        "engineKey":"rbox3",
+        "variantKey":"R003",
+        "defaultDims":{ "W":350, "D":230, "H":220 }
       }
     ]
   }
