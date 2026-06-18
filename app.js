@@ -100,6 +100,14 @@ function getCfgT003() {
   };
 }
 
+function getCfgT004() {
+  return {
+    W: val('baseW', 130),
+    D: val('baseD', 65),
+    H: val('panelH', 190)
+  };
+}
+
 // R001 (A-Type RSC) config
 function getCfgR001() {
   return {
@@ -222,6 +230,10 @@ function render(forceFit = false) {
     const c = getCfgT003();
     svgStr = T003_renderSVG(c, state);
 
+  } else if (eng === 'bbox4') {
+    const c = getCfgT004();
+    svgStr = T004_renderSVG(c, state);
+
   } else if (eng === 'rbox') {
     // ── R001 A-Type RSC ──────────────────────────────────────
     const c = getCfgR001();
@@ -325,6 +337,10 @@ function fitToScreen() {
       const c = getCfgT003();
       const layout = T003_getLayout(c.W, c.D, c.H);
       bounds = layout.bounds;
+    } else if (eng === 'bbox4') {
+      const c = getCfgT004();
+      const layout = T004_getLayout(c.W, c.D, c.H);
+      bounds = layout.bounds;
     } else if (eng === 'rbox') {
       // ── R001 bounds ─────────────────────────────────────────
       const c = getCfgR001();
@@ -418,6 +434,12 @@ function buildExportSVG(cfg, eng) {
       : '';
   }
 
+  if (eng === 'bbox4') {
+    return typeof T004_buildExportSVG === 'function'
+      ? T004_buildExportSVG(cfg)
+      : '';
+  }
+
   if (eng === 'rbox') {
     return typeof R001_buildExportSVG === 'function'
       ? R001_buildExportSVG(cfg)
@@ -451,6 +473,7 @@ function buildDXF(cfg, eng) {
   if (eng === 'bbox') return typeof T001_buildDXF === 'function' ? T001_buildDXF(cfg) : '';
   if (eng === 'bbox2') return typeof T002_buildDXF === 'function' ? T002_buildDXF(cfg) : '';
   if (eng === 'bbox3') return typeof T003_buildDXF === 'function' ? T003_buildDXF(cfg) : '';
+  if (eng === 'bbox4') return typeof T004_buildDXF === 'function' ? T004_buildDXF(cfg) : '';
   if (eng === 'rbox') return typeof R001_buildDXF === 'function' ? R001_buildDXF(cfg) : '';
   if (eng === 'rbox2') return typeof R002_buildDXF === 'function' ? R002_buildDXF(cfg) : '';
   if (eng === 'rbox3') return typeof R003_buildDXF === 'function' ? R003_buildDXF(cfg) : '';
@@ -786,6 +809,7 @@ function bindAll() {
       : eng === 'bbox' ? getCfgT001()
       : eng === 'bbox2' ? getCfgT002()
       : eng === 'bbox3' ? getCfgT003()
+      : eng === 'bbox4' ? getCfgT004()
       : eng === 'rbox' ? getCfgR001()
       : eng === 'rbox2' ? getCfgR002()
       : eng === 'rbox3' ? getCfgR003()
@@ -811,6 +835,7 @@ function bindAll() {
       : eng === 'bbox' ? getCfgT001()
       : eng === 'bbox2' ? getCfgT002()
       : eng === 'bbox3' ? getCfgT003()
+      : eng === 'bbox4' ? getCfgT004()
       : eng === 'rbox' ? getCfgR001()
       : eng === 'rbox2' ? getCfgR002()
       : eng === 'rbox3' ? getCfgR003()

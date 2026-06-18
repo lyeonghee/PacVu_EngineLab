@@ -48,6 +48,18 @@
           "D": 86.5,
           "H": 296
         }
+      },
+      {
+        "label": "T004 B-Type Tuck",
+        "koreanName": "B-Type Tuck Box",
+        "fefcoCode": "T004",
+        "engineKey": "bbox4",
+        "variantKey": "T004",
+        "defaultDims": {
+          "W": 130,
+          "D": 65,
+          "H": 190
+        }
       }
     ]
   },
