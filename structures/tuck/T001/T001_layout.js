@@ -1,865 +1,960 @@
 // ============================================================
-// T001_layout.js - B-Type tuck box stable reference layout
-// Depends on T001_spec.js
+// T001_template_work.js - T001 current working source-SVG template
+// Base source: T001 57x57x177 source SVG
+// Style follows T002: source elements + renderer restyling.
 // ============================================================
 
-function T001_round(value) {
+const T001_SOURCE_ELEMENTS = {
+  "cutElements": [
+    "<polyline points=\"890.995 811.27 810.208 863.712 815.798 880.928\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<path d=\"M807.71,892.058c2.725,0,5.276-1.3,6.879-3.504,1.602-2.205,2.051-5.033,1.209-7.626\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<polyline points=\"807.71 892.058 742.176 892.058 742.176 819.774 733.672 811.27 681.232 892.058 681.232 923.239\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<path d=\"M669.893,934.578c6.259,0,11.339-5.08,11.339-11.339\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<line x1=\"669.893\" y1=\"934.578\" x2=\"635.877\" y2=\"934.578\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<path d=\"M624.538,923.239c0,6.259,5.08,11.339,11.339,11.339\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<polyline points=\"624.538 923.239 624.538 892.058 572.098 811.27 563.594 819.774 563.594 892.058 498.248 892.058\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<path d=\"M490.135,881.008c-.811,2.587-.346,5.395,1.259,7.579,1.604,2.186,4.144,3.471,6.854,3.471\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<polyline points=\"490.135 881.008 495.562 863.712 410.523 811.27 402.019 819.774 402.019 934.578 372.255 934.578\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<path d=\"M360.916,923.239c0,6.259,5.08,11.339,11.339,11.339\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<polyline points=\"360.916 923.239 360.916 892.058 298.554 892.058 298.554 923.239\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<path d=\"M287.216,934.578c6.259,0,11.338-5.08,11.338-11.339\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<path d=\"M890.995,811.27v-501.732l-7.087-7.086-3.788-72.284h-105.652c-6.409,0-12.031,4.314-13.69,10.505l-10.098,37.685-11.338,11.339v19.842h-60.945\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<path d=\"M627.373,309.538c1.527,12.936,12.486,22.678,25.512,22.678s23.984-9.742,25.512-22.678\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<path d=\"M627.373,309.538h-60.945v-19.842l-11.338-11.339-10.098-37.685c-1.659-6.19-7.281-10.505-13.69-10.505h-105.578l-3.87,73.997\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<path d=\"M410.523,303.869c0,3.072,2.449,5.587,5.521,5.667,3.071.08,5.648-2.303,5.809-5.371\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<path d=\"M287.216,934.578h-29.765v-114.804l-8.504-8.504-70.865-18.988v-463.755l70.865-18.989v-161.574l1.799-34.305c.907-17.317,15.212-30.893,32.554-30.893h92.871c17.341,0,31.646,13.575,32.554,30.893l1.798,34.305v155.905\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\"/>",
+    "<line x1=\"296.234\" y1=\"928.909\" x2=\"300.415\" y2=\"955.799\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\" stroke-width=\".5\"/>",
+    "<line x1=\"677.166\" y1=\"931.086\" x2=\"693.693\" y2=\"952.707\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\" stroke-width=\".5\"/>",
+    "<line x1=\"814.385\" y1=\"889.985\" x2=\"831.822\" y2=\"910.878\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\" stroke-width=\".5\"/>",
+    "<line x1=\"363.236\" y1=\"930.842\" x2=\"359.055\" y2=\"957.733\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\" stroke-width=\".5\"/>",
+    "<line x1=\"626.317\" y1=\"929.43\" x2=\"612.246\" y2=\"952.723\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\" stroke-width=\".5\"/>",
+    "<line x1=\"491.144\" y1=\"888.003\" x2=\"475.697\" y2=\"910.408\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\" stroke-width=\".5\"/>",
+    "<line x1=\"541.876\" y1=\"234.463\" x2=\"555.65\" y2=\"228.51\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"10\" stroke-width=\".5\"/>",
+    "<line x1=\"764.885\" y1=\"233.737\" x2=\"751.112\" y2=\"227.783\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"10\" stroke-width=\".5\"/>",
+    "<line x1=\"243.462\" y1=\"309.538\" x2=\"121.212\" y2=\"309.538\" fill=\"none\" stroke=\"#ee3924\" stroke-miterlimit=\"2.613\" stroke-width=\".75\"/>"
+  ],
+  "foldElements": [
+    "<line x1=\"890.145\" y1=\"811.27\" x2=\"734.523\" y2=\"811.27\" fill=\"none\" stroke=\"#263aed\" stroke-dasharray=\"3\" stroke-miterlimit=\"10\" stroke-width=\".75\"/>",
+    "<line x1=\"732.822\" y1=\"811.27\" x2=\"572.949\" y2=\"811.27\" fill=\"none\" stroke=\"#263aed\" stroke-dasharray=\"3\" stroke-miterlimit=\"10\" stroke-width=\".75\"/>",
+    "<line x1=\"571.247\" y1=\"811.27\" x2=\"411.373\" y2=\"811.27\" fill=\"none\" stroke=\"#263aed\" stroke-dasharray=\"3\" stroke-miterlimit=\"10\" stroke-width=\".75\"/>",
+    "<line x1=\"409.672\" y1=\"811.27\" x2=\"249.798\" y2=\"811.27\" fill=\"none\" stroke=\"#263aed\" stroke-dasharray=\"3\" stroke-miterlimit=\"10\" stroke-width=\".75\"/>",
+    "<line x1=\"733.672\" y1=\"310.389\" x2=\"733.672\" y2=\"810.42\" fill=\"none\" stroke=\"#263aed\" stroke-dasharray=\"3\" stroke-miterlimit=\"10\" stroke-width=\".75\"/>",
+    "<line x1=\"410.523\" y1=\"310.389\" x2=\"410.523\" y2=\"810.42\" fill=\"none\" stroke=\"#263aed\" stroke-dasharray=\"3\" stroke-miterlimit=\"10\" stroke-width=\".75\"/>",
+    "<line x1=\"572.098\" y1=\"310.389\" x2=\"572.098\" y2=\"810.42\" fill=\"none\" stroke=\"#263aed\" stroke-dasharray=\"3\" stroke-miterlimit=\"10\" stroke-width=\".75\"/>",
+    "<line x1=\"248.948\" y1=\"310.389\" x2=\"248.948\" y2=\"810.42\" fill=\"none\" stroke=\"#263aed\" stroke-dasharray=\"3\" stroke-miterlimit=\"10\" stroke-width=\".75\"/>",
+    "<line x1=\"890.145\" y1=\"309.538\" x2=\"740.192\" y2=\"309.538\" fill=\"none\" stroke=\"#3b53a4\" stroke-dasharray=\"3\" stroke-miterlimit=\"2.613\" stroke-width=\".5\"/>",
+    "<line x1=\"565.578\" y1=\"309.538\" x2=\"417.042\" y2=\"309.538\" fill=\"none\" stroke=\"#263aed\" stroke-dasharray=\"3\" stroke-miterlimit=\"10\" stroke-width=\".75\"/>",
+    "<line x1=\"409.672\" y1=\"306.704\" x2=\"249.798\" y2=\"306.704\" fill=\"none\" stroke=\"#263aed\" stroke-dasharray=\"3\" stroke-miterlimit=\"10\" stroke-width=\".75\"/>",
+    "<line x1=\"409.672\" y1=\"147.964\" x2=\"249.798\" y2=\"147.964\" fill=\"none\" stroke=\"#3b53a4\" stroke-dasharray=\"3\" stroke-miterlimit=\"2.613\" stroke-width=\".5\"/>",
+    "<line x1=\"243.653\" y1=\"471.222\" x2=\"124.631\" y2=\"471.222\" fill=\"none\" stroke=\"#263aed\" stroke-dasharray=\"3 3\" stroke-miterlimit=\"10\" stroke-width=\".75\"/>"
+  ],
+  "bleedElement": "<path d=\"M482.148,878.464c-1.613,5.146-.671,10.813,2.518,15.154,3.191,4.348,8.316,6.943,13.71,6.943l2.22.002v-.002h-2.22,73.85l-.694-73.59,1.417-1.165,43.214,68.769v28.663c0,10.942,8.901,19.844,19.843,19.844h34.016c10.941,0,19.843-8.901,19.843-19.844v-28.663l42.957-68.683.979.996v73.673h74.038c5.423,0,10.566-2.619,13.759-7.01,3.19-4.389,4.093-10.091,2.417-15.25h0l-3.575-11.01,75.314-48.89,3.874-2.769v-509.618l-7.27-7.268-4.04-77.083h-113.722c-10.245,0-19.252,6.912-21.904,16.808l-9.508,35.484-12.218,12.218v14.86h-52.441l-8.115.103-.331,7.403c-1.021,8.649-8.359,15.172-17.067,15.172s-16.045-6.522-17.066-15.171l-.233-7.216-8.212-.292h-52.441v-14.86l-12.217-12.219-9.508-35.484c-2.652-9.896-11.659-16.808-21.904-16.808h-112.275v-73.699l-1.81-34.75c-1.146-21.842-19.175-38.952-41.046-38.952h-92.871c-21.873,0-39.902,17.11-41.046,38.952l-1.811,34.527.16,179.37.844,127.423-.691,240.863-.446,120.984,8.637,6.914v119.786h38.269c10.941,0,19.842-8.901,19.842-19.844h0v-22.677h45.354v22.677c0,10.942,8.901,19.844,19.843,19.844h38.268v-119.786l1.259-1.259,73.686,45.44-3.446,10.984\" fill=\"none\" stroke=\"#263aed\" stroke-miterlimit=\"10\"/>"
+};
+
+const T001_BLEED_OFFSET = 1.8;
+
+function T001_num(value) {
   return +(+value).toFixed(4);
 }
 
-function T001_point(x, y) {
-  return T001_round(x) + ',' + T001_round(y);
+function T001_getSpec(input) {
+  const W = Number(input && input.W) || 57;
+  const D = Number(input && input.D) || 57;
+  const H = Number(input && input.H) || 177;
+  const glueWidth = Math.min(D * (25 / 57), 35);
+
+  const source = {
+    unitToMm: 25.4 / 72,
+    xGlueL: 178.082,
+    xFrontL: 248.948,
+    xFrontR: 410.523,
+    xSideLR: 572.098,
+    xBackR: 733.672,
+    xSideRR: 890.995,
+    yTop: 82.766,
+    yLidFold: 147.964,
+    yBodyTop: 309.538,
+    yBodyBottom: 811.27,
+    yLockBottom: 934.578
+  };
+
+  const grid = {
+    xGlueL: 0,
+    xFrontL: glueWidth,
+    xFrontR: glueWidth + W,
+    xSideLR: glueWidth + W + D,
+    xBackR: glueWidth + W + D + W,
+    xSideRR: glueWidth + W + D + W + D,
+    yTop: 0,
+    yLidFold: D * (23 / 57),
+    yBodyTop: D * (23 / 57) + D,
+    yBodyBottom: D * (23 / 57) + D + H,
+    yLockBottom: D * (23 / 57) + D + H + D * (43.5 / 57)
+  };
+  grid.glueWidth = glueWidth;
+
+  return { W, D, H, glueWidth, source, grid };
 }
 
-function T001_getGrid(spec) {
-  const D = spec.D;
-  const xGlueL = 0;
-  const glueWidth = Math.min(D * (25 / 57), 30);
-  const xFrontL = glueWidth;
-  const xFrontR = xFrontL + spec.W;
-  const xSideLR = xFrontR + spec.D;
-  const xBackR = xSideLR + spec.W;
-  const xSideRR = xBackR + spec.D * (55.504 / 57);
+function T001_hasThumbNotch(spec) {
+  return spec.W < 100 && spec.D < 100;
+}
 
-  const yTop = 0;
-  const yLidFold = D * (23 / 57);
-  const yBodyTop = yLidFold + D;
-  const yBodyBottom = yBodyTop + spec.H;
-  const yLockBottom = yBodyBottom + D * (43.5 / 57);
+function T001_piecewise(value, sourceAnchors, targetAnchors) {
+  if (value <= sourceAnchors[0]) {
+    const s = (targetAnchors[1] - targetAnchors[0]) / (sourceAnchors[1] - sourceAnchors[0]);
+    return targetAnchors[0] + (value - sourceAnchors[0]) * s;
+  }
+  for (let i = 0; i < sourceAnchors.length - 1; i += 1) {
+    if (value <= sourceAnchors[i + 1]) {
+      const s = (targetAnchors[i + 1] - targetAnchors[i]) / (sourceAnchors[i + 1] - sourceAnchors[i]);
+      return targetAnchors[i] + (value - sourceAnchors[i]) * s;
+    }
+  }
+  const n = sourceAnchors.length - 1;
+  const s = (targetAnchors[n] - targetAnchors[n - 1]) / (sourceAnchors[n] - sourceAnchors[n - 1]);
+  return targetAnchors[n] + (value - sourceAnchors[n]) * s;
+}
+
+function T001_createMapper(spec) {
+  const src = spec.source;
+  const grid = spec.grid;
+  const sx = [src.xGlueL, src.xFrontL, src.xFrontR, src.xSideLR, src.xBackR, src.xSideRR];
+  const tx = [grid.xGlueL, grid.xFrontL, grid.xFrontR, grid.xSideLR, grid.xBackR, grid.xSideRR];
+  const sy = [src.yTop, src.yLidFold, src.yBodyTop, src.yBodyBottom, src.yLockBottom];
+  const ty = [grid.yTop, grid.yLidFold, grid.yBodyTop, grid.yBodyBottom, grid.yLockBottom];
 
   return {
-    xGlueL,
-    glueWidth,
-    xFrontL,
-    xFrontR,
-    xSideLR,
-    xBackR,
-    xSideRR,
-    yTop,
-    yLidFold,
-    yBodyTop,
-    yBodyBottom,
-    yLockBottom
+    point(x, y) {
+      return {
+        x: T001_piecewise(x, sx, tx),
+        y: T001_piecewise(y, sy, ty)
+      };
+    },
+    x(x) {
+      return T001_piecewise(x, sx, tx);
+    },
+    y(y) {
+      return T001_piecewise(y, sy, ty);
+    }
   };
 }
 
-function T001_buildOuterPath(spec, grid) {
-  const W = spec.W;
-  const D = spec.D;
-  const {
-    xGlueL,
-    xFrontL: xP1,
-    xFrontR: xP2,
-    xSideLR: xP3,
-    xBackR: xP4,
-    xSideRR: xEnd,
-    yTop,
-    yLidFold: yTF,
-    yBodyTop: yLF,
-    yBodyBottom: yBB,
-    yLockBottom: yLO
-  } = grid;
+function T001_tokenizePath(d) {
+  return d.match(/[a-zA-Z]|[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g) || [];
+}
 
-  const P = T001_point;
-  const k = 0.5523;
+function T001_isCommand(token) {
+  return /^[a-zA-Z]$/.test(token);
+}
 
-  const yLSFTop = yLF - D * (28 / 57);
-  const yBVert = yBB + D * (39.5 / 57);
-  const yLRFlat = yBB + D * (28.5 / 57);
-  const glueSlope = D * (6.699 / 57);
-  const lockStep = D * (3 / 57);
-  const lockCornerR = D * (4 / 57);
-  const lockLRDiagX = D * (30 / 57);
-  const lockLRDiagY = D * (18.5 / 57);
+function T001_pathPoint(mapper, point) {
+  const p = mapper.point(point.x, point.y);
+  return T001_num(p.x) + ' ' + T001_num(p.y);
+}
 
-  const xTC = (xP1 + xP2) / 2;
-  const tuckFlatHalf = D * (16.381 / 57);
-  const xTFL = xTC - tuckFlatHalf;
-  const xTFR = xTC + tuckFlatHalf;
-  const tuckStraightTop = D * (10.898 / 57);
-  const y36 = yTF + D * (55 / 57);
-  const tL1x = xP1 + D * (6.001 / 57);
-  const tL1y = yTop - D * (0.001 / 57);
-  const tL2x = xP1 + D * (0.954 / 57);
-  const tL2y = D * (4.785 / 57);
-  const tR1x = xP2 - D * (0.954 / 57);
-  const tR1y = D * (4.785 / 57);
-  const tR2x = xP2 - D * (6 / 57);
-  const tR2y = yTop - D * (0.001 / 57);
+function T001_transformPathD(d, mapper) {
+  const tokens = T001_tokenizePath(d);
+  const out = [];
+  let i = 0;
+  let cmd = '';
+  let current = { x: 0, y: 0 };
+  let start = { x: 0, y: 0 };
+  let previousC2 = null;
 
-  const xEndCorn = xEnd - D * (2.501 / 57);
-  const yEndCorn = yLF - D * (2.503 / 57);
-  const sfRFlatR = xEnd - D * (3.837 / 57);
-  const sfRFlatL = xP4 + D * (14.395 / 57);
-  const sR1x = xP4 + D * (12.134 / 57);
-  const sR2x = xP4 + D * (10.150 / 57);
-  const sR2y = yLSFTop + D * (1.519 / 57);
-  const x28R = xP4 + D * (9.565 / 57);
-  const y28 = yLSFTop + D * (3.71 / 57);
-  const x29R = xP4 + D * (6.003 / 57);
-  const y29 = yLSFTop + D * (17 / 57);
-  const x30R = xP4 + D * (2.003 / 57);
-  const y30 = yLSFTop + D * (21 / 57);
-
-  const xNeckC = (xP3 + xP4) / 2;
-  const neckHalfW = D * (9 / 57);
-  const xNeckL = xNeckC - neckHalfW;
-  const xNeckR = xNeckC + neckHalfW;
-  const yNeckBot = yLF + D * (8 / 57);
-  const nL2x = xNeckL + D * (0.539 / 57);
-  const nL2y = yLF + D * (4.561 / 57);
-  const nL1x = xNeckL + D * (4.407 / 57);
-  const nL1y = yNeckBot;
-  const nR2x = xNeckR - D * (4.405 / 57);
-  const nR2y = yNeckBot;
-  const nR1x = xNeckR - D * (0.539 / 57);
-  const nR1y = yLF + D * (4.561 / 57);
-
-  const x28L = xP3 - D * (9.561 / 57);
-  const x29L = xP3 - D * (5.998 / 57);
-  const x30L = xP3 - D * (1.998 / 57);
-  const sL1x = xP3 - D * (10.146 / 57);
-  const sL1y = yLSFTop + D * (1.519 / 57);
-  const sL2x = xP3 - D * (12.129 / 57);
-  const sfLBezEnd = xP3 - D * (14.390 / 57);
-  const sfLFlatR = xP2 + D * (5.364 / 57);
-  const x35 = xP2 + D * (4 / 57);
-  const y35 = yTF + D * (55.1 / 57);
-  const urCP1y = y36 + D * (1.084 / 57);
-  const urCP2x = xP2 + D * (0.865 / 57);
-  const urCP3x = xP2 + D * (1.949 / 57);
-  const urCP4x = xP2 + D * (3.032 / 57);
-  const urCP5x = xP2 + D * (3.941 / 57);
-  const urCP5y = yLF - D * (0.816 / 57);
-
-  const lockAOuterX = D * (13.5 / 57);
-  const lockAInnerX = D * (17.5 / 57);
-  const lockBDiagW = D * (18.5 / 57);
-  const lockBGapHalf = D * (6 / 57);
-  let lbInL = xP3 + lockBDiagW;
-  let lbInR = xP4 - lockBDiagW;
-  if (lbInL > lbInR) {
-    lbInL = xNeckC;
-    lbInR = xNeckC;
+  function read() {
+    return Number(tokens[i++]);
   }
-  const lbGapL = Math.min(Math.max(xNeckC - lockBGapHalf, lbInL + lockCornerR), xNeckC);
-  const lbGapR = Math.max(Math.min(xNeckC + lockBGapHalf, lbInR - lockCornerR), xNeckC);
 
+  function hasNumber() {
+    return i < tokens.length && !T001_isCommand(tokens[i]);
+  }
+
+  while (i < tokens.length) {
+    if (T001_isCommand(tokens[i])) {
+      cmd = tokens[i++];
+    }
+
+    const lower = cmd.toLowerCase();
+    const relative = cmd === lower;
+
+    if (lower === 'z') {
+      out.push('Z');
+      current = { x: start.x, y: start.y };
+      previousC2 = null;
+      continue;
+    }
+
+    if (lower === 'm') {
+      let first = true;
+      while (hasNumber()) {
+        const x = read();
+        const y = read();
+        const next = relative ? { x: current.x + x, y: current.y + y } : { x, y };
+        out.push((first ? 'M ' : 'L ') + T001_pathPoint(mapper, next));
+        current = next;
+        if (first) {
+          start = { x: current.x, y: current.y };
+        }
+        first = false;
+        previousC2 = null;
+      }
+      cmd = relative ? 'l' : 'L';
+      continue;
+    }
+
+    if (lower === 'l') {
+      while (hasNumber()) {
+        const x = read();
+        const y = read();
+        const next = relative ? { x: current.x + x, y: current.y + y } : { x, y };
+        out.push('L ' + T001_pathPoint(mapper, next));
+        current = next;
+        previousC2 = null;
+      }
+      continue;
+    }
+
+    if (lower === 'h') {
+      while (hasNumber()) {
+        const x = read();
+        const next = { x: relative ? current.x + x : x, y: current.y };
+        out.push('L ' + T001_pathPoint(mapper, next));
+        current = next;
+        previousC2 = null;
+      }
+      continue;
+    }
+
+    if (lower === 'v') {
+      while (hasNumber()) {
+        const y = read();
+        const next = { x: current.x, y: relative ? current.y + y : y };
+        out.push('L ' + T001_pathPoint(mapper, next));
+        current = next;
+        previousC2 = null;
+      }
+      continue;
+    }
+
+    if (lower === 'c') {
+      while (hasNumber()) {
+        const c1 = { x: read(), y: read() };
+        const c2 = { x: read(), y: read() };
+        const end = { x: read(), y: read() };
+        const a1 = relative ? { x: current.x + c1.x, y: current.y + c1.y } : c1;
+        const a2 = relative ? { x: current.x + c2.x, y: current.y + c2.y } : c2;
+        const ae = relative ? { x: current.x + end.x, y: current.y + end.y } : end;
+        out.push('C ' + T001_pathPoint(mapper, a1) + ' ' + T001_pathPoint(mapper, a2) + ' ' + T001_pathPoint(mapper, ae));
+        current = ae;
+        previousC2 = a2;
+      }
+      continue;
+    }
+
+    if (lower === 's') {
+      while (hasNumber()) {
+        const c1 = previousC2 ? {
+          x: current.x * 2 - previousC2.x,
+          y: current.y * 2 - previousC2.y
+        } : { x: current.x, y: current.y };
+        const c2 = { x: read(), y: read() };
+        const end = { x: read(), y: read() };
+        const a2 = relative ? { x: current.x + c2.x, y: current.y + c2.y } : c2;
+        const ae = relative ? { x: current.x + end.x, y: current.y + end.y } : end;
+        out.push('C ' + T001_pathPoint(mapper, c1) + ' ' + T001_pathPoint(mapper, a2) + ' ' + T001_pathPoint(mapper, ae));
+        current = ae;
+        previousC2 = a2;
+      }
+      continue;
+    }
+
+    throw new Error('Unsupported SVG path command for T001 template: ' + cmd);
+  }
+
+  return out.join(' ');
+}
+
+function T001_attr(el, name) {
+  const match = el.match(new RegExp('\\s' + name + '="([^"]*)"'));
+  return match ? match[1] : '';
+}
+
+function T001_transformElement(el, mapper) {
+  if (/^<path\b/.test(el)) {
+    const d = T001_attr(el, 'd');
+    return el.replace(/d="[^"]*"/, 'd="' + T001_transformPathD(d, mapper) + '"');
+  }
+
+  if (/^<polyline\b/.test(el)) {
+    const nums = T001_attr(el, 'points').match(/-?\d+(?:\.\d+)?/g) || [];
+    const mapped = [];
+    for (let i = 0; i < nums.length - 1; i += 2) {
+      const p = mapper.point(Number(nums[i]), Number(nums[i + 1]));
+      mapped.push(T001_num(p.x) + ',' + T001_num(p.y));
+    }
+    return el.replace(/points="[^"]*"/, 'points="' + mapped.join(' ') + '"');
+  }
+
+  if (/^<line\b/.test(el)) {
+    const p1 = mapper.point(Number(T001_attr(el, 'x1')), Number(T001_attr(el, 'y1')));
+    const p2 = mapper.point(Number(T001_attr(el, 'x2')), Number(T001_attr(el, 'y2')));
+    return el
+      .replace(/x1="[^"]*"/, 'x1="' + T001_num(p1.x) + '"')
+      .replace(/y1="[^"]*"/, 'y1="' + T001_num(p1.y) + '"')
+      .replace(/x2="[^"]*"/, 'x2="' + T001_num(p2.x) + '"')
+      .replace(/y2="[^"]*"/, 'y2="' + T001_num(p2.y) + '"');
+  }
+
+  return el;
+}
+
+function T001_restyleElement(el, className) {
+  const out = el
+    .replace(/\sfill="[^"]*"/g, '')
+    .replace(/\sstroke="[^"]*"/g, '')
+    .replace(/\sstroke-width="[^"]*"/g, '')
+    .replace(/\sstroke-dasharray="[^"]*"/g, '')
+    .replace(/\sstroke-miterlimit="[^"]*"/g, '')
+    .replace(/\sstroke-linecap="[^"]*"/g, '')
+    .replace(/\sstroke-linejoin="[^"]*"/g, '');
+  return out.replace(/\/>$/, ' class="' + className + '"/>');
+}
+
+function T001_elementToPathD(el) {
+  if (/^<path\b/.test(el)) {
+    return T001_attr(el, 'd');
+  }
+  if (/^<polyline\b/.test(el)) {
+    const nums = T001_attr(el, 'points').match(/-?\d+(?:\.\d+)?/g) || [];
+    const parts = [];
+    for (let i = 0; i < nums.length - 1; i += 2) {
+      parts.push((i === 0 ? 'M ' : 'L ') + T001_num(nums[i]) + ' ' + T001_num(nums[i + 1]));
+    }
+    return parts.join(' ');
+  }
+  if (/^<line\b/.test(el)) {
+    return [
+      'M ' + T001_num(T001_attr(el, 'x1')) + ' ' + T001_num(T001_attr(el, 'y1')),
+      'L ' + T001_num(T001_attr(el, 'x2')) + ' ' + T001_num(T001_attr(el, 'y2'))
+    ].join(' ');
+  }
+  return '';
+}
+
+function T001_parseAbsolutePath(d) {
+  const tokens = T001_tokenizePath(d);
+  const segments = [];
+  let i = 0;
+  let cmd = '';
+  let current = null;
+  let start = null;
+
+  function read() {
+    return Number(tokens[i++]);
+  }
+
+  function hasNumber() {
+    return i < tokens.length && !T001_isCommand(tokens[i]);
+  }
+
+  while (i < tokens.length) {
+    if (T001_isCommand(tokens[i])) {
+      cmd = tokens[i++];
+    }
+    const upper = cmd.toUpperCase();
+
+    if (upper === 'M') {
+      while (hasNumber()) {
+        const point = { x: read(), y: read() };
+        if (!current) {
+          current = point;
+          start = point;
+        } else {
+          segments.push({ type: 'L', from: current, to: point });
+          current = point;
+        }
+        cmd = 'L';
+      }
+    } else if (upper === 'L') {
+      while (hasNumber()) {
+        const point = { x: read(), y: read() };
+        segments.push({ type: 'L', from: current, to: point });
+        current = point;
+      }
+    } else if (upper === 'C') {
+      while (hasNumber()) {
+        const c1 = { x: read(), y: read() };
+        const c2 = { x: read(), y: read() };
+        const point = { x: read(), y: read() };
+        segments.push({ type: 'C', from: current, c1, c2, to: point });
+        current = point;
+      }
+    } else if (upper === 'Z') {
+      if (current && start) {
+        segments.push({ type: 'L', from: current, to: start });
+        current = start;
+      }
+    } else {
+      throw new Error('Unsupported absolute path command for T001 fill: ' + cmd);
+    }
+  }
+
+  return {
+    start,
+    end: current,
+    segments
+  };
+}
+
+function T001_distance(a, b) {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function T001_segmentsToD(start, segments) {
+  const out = ['M ' + T001_num(start.x) + ' ' + T001_num(start.y)];
+  segments.forEach(segment => {
+    if (segment.type === 'L') {
+      out.push('L ' + T001_num(segment.to.x) + ' ' + T001_num(segment.to.y));
+    } else if (segment.type === 'C') {
+      out.push(
+        'C ' +
+        T001_num(segment.c1.x) + ' ' + T001_num(segment.c1.y) + ' ' +
+        T001_num(segment.c2.x) + ' ' + T001_num(segment.c2.y) + ' ' +
+        T001_num(segment.to.x) + ' ' + T001_num(segment.to.y)
+      );
+    }
+  });
+  out.push('Z');
+  return out.join(' ');
+}
+
+function T001_cubicPoint(p0, p1, p2, p3, t) {
+  const mt = 1 - t;
+  const mt2 = mt * mt;
+  const t2 = t * t;
+  return {
+    x: mt2 * mt * p0.x + 3 * mt2 * t * p1.x + 3 * mt * t2 * p2.x + t2 * t * p3.x,
+    y: mt2 * mt * p0.y + 3 * mt2 * t * p1.y + 3 * mt * t2 * p2.y + t2 * t * p3.y
+  };
+}
+
+function T001_flattenPathD(d) {
+  const parsed = T001_parseAbsolutePath(d);
+  if (!parsed.start) return [];
+  const points = [{ x: parsed.start.x, y: parsed.start.y }];
+  parsed.segments.forEach(segment => {
+    if (segment.type === 'L') {
+      points.push({ x: segment.to.x, y: segment.to.y });
+    } else if (segment.type === 'C') {
+      const chord = T001_distance(segment.from, segment.to);
+      const control = T001_distance(segment.from, segment.c1) +
+        T001_distance(segment.c1, segment.c2) +
+        T001_distance(segment.c2, segment.to);
+      const steps = Math.max(8, Math.min(32, Math.ceil((control + chord) / 8)));
+      for (let i = 1; i <= steps; i += 1) {
+        points.push(T001_cubicPoint(segment.from, segment.c1, segment.c2, segment.to, i / steps));
+      }
+    }
+  });
+  return points.filter((point, index) => {
+    if (index === 0) return true;
+    return T001_distance(point, points[index - 1]) > 0.01;
+  });
+}
+
+function T001_polygonBounds(points) {
+  const xs = points.map(point => point.x);
+  const ys = points.map(point => point.y);
+  return {
+    minX: Math.min(...xs),
+    minY: Math.min(...ys),
+    maxX: Math.max(...xs),
+    maxY: Math.max(...ys)
+  };
+}
+
+function T001_polygonArea(points) {
+  let area = 0;
+  for (let i = 0; i < points.length; i += 1) {
+    const a = points[i];
+    const b = points[(i + 1) % points.length];
+    area += a.x * b.y - b.x * a.y;
+  }
+  return area / 2;
+}
+
+function T001_polygonToPath(points) {
+  if (!points.length) return '';
+  return points.map((point, index) =>
+    (index === 0 ? 'M ' : 'L ') + T001_num(point.x) + ' ' + T001_num(point.y)
+  ).join(' ') + ' Z';
+}
+
+function T001_lineIntersection(a1, a2, b1, b2) {
+  const x1 = a1.x;
+  const y1 = a1.y;
+  const x2 = a2.x;
+  const y2 = a2.y;
+  const x3 = b1.x;
+  const y3 = b1.y;
+  const x4 = b2.x;
+  const y4 = b2.y;
+  const den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+  if (Math.abs(den) < 0.000001) return null;
+  return {
+    x: ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / den,
+    y: ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / den
+  };
+}
+
+function T001_offsetPolygonFallback(points, offset) {
+  if (points.length < 3) return null;
+  const baseBounds = T001_polygonBounds(points);
+
+  function offsetWithSide(side) {
+    const shifted = [];
+    for (let i = 0; i < points.length; i += 1) {
+      const prev = points[(i - 1 + points.length) % points.length];
+      const curr = points[i];
+      const next = points[(i + 1) % points.length];
+      const pDx = curr.x - prev.x;
+      const pDy = curr.y - prev.y;
+      const nDx = next.x - curr.x;
+      const nDy = next.y - curr.y;
+      const pLen = Math.sqrt(pDx * pDx + pDy * pDy) || 1;
+      const nLen = Math.sqrt(nDx * nDx + nDy * nDy) || 1;
+      const pNormal = { x: (-pDy / pLen) * side, y: (pDx / pLen) * side };
+      const nNormal = { x: (-nDy / nLen) * side, y: (nDx / nLen) * side };
+      const a1 = { x: prev.x + pNormal.x * offset, y: prev.y + pNormal.y * offset };
+      const a2 = { x: curr.x + pNormal.x * offset, y: curr.y + pNormal.y * offset };
+      const b1 = { x: curr.x + nNormal.x * offset, y: curr.y + nNormal.y * offset };
+      const b2 = { x: next.x + nNormal.x * offset, y: next.y + nNormal.y * offset };
+      let point = T001_lineIntersection(a1, a2, b1, b2);
+      if (!point || T001_distance(point, curr) > 24) {
+        const mx = pNormal.x + nNormal.x;
+        const my = pNormal.y + nNormal.y;
+        const mLen = Math.sqrt(mx * mx + my * my) || 1;
+        point = { x: curr.x + (mx / mLen) * offset, y: curr.y + (my / mLen) * offset };
+      }
+      shifted.push(point);
+    }
+    return shifted;
+  }
+
+  function expansionScore(candidate) {
+    const bounds = T001_polygonBounds(candidate);
+    return (baseBounds.minX - bounds.minX) +
+      (baseBounds.minY - bounds.minY) +
+      (bounds.maxX - baseBounds.maxX) +
+      (bounds.maxY - baseBounds.maxY);
+  }
+
+  const a = offsetWithSide(1);
+  const b = offsetWithSide(-1);
+  return expansionScore(a) >= expansionScore(b) ? a : b;
+}
+
+function T001_offsetPolygonWithClipper(points, offset) {
+  if (typeof ClipperLib === 'undefined' || !points.length) {
+    return T001_offsetPolygonFallback(points, offset);
+  }
+  const scale = 1000;
+  const baseBounds = T001_polygonBounds(points);
+  const source = points.map(point => ({
+    X: Math.round(point.x * scale),
+    Y: Math.round(point.y * scale)
+  }));
+
+  function run(delta) {
+    const co = new ClipperLib.ClipperOffset(2, 0.25 * scale);
+    co.AddPath(source, ClipperLib.JoinType.jtRound, ClipperLib.EndType.etClosedPolygon);
+    const solution = new ClipperLib.Paths();
+    co.Execute(solution, delta * scale);
+    if (!solution.length) return null;
+    const largest = solution.reduce((best, path) =>
+      Math.abs(ClipperLib.Clipper.Area(path)) > Math.abs(ClipperLib.Clipper.Area(best)) ? path : best
+    , solution[0]);
+    return largest.map(point => ({ x: point.X / scale, y: point.Y / scale }));
+  }
+
+  let result = run(offset);
+  if (!result) return null;
+  let resultBounds = T001_polygonBounds(result);
+  const expands = resultBounds.minX <= baseBounds.minX - 1 &&
+    resultBounds.minY <= baseBounds.minY - 1 &&
+    resultBounds.maxX >= baseBounds.maxX + 1 &&
+    resultBounds.maxY >= baseBounds.maxY + 1;
+  if (!expands) {
+    result = run(-offset);
+    resultBounds = result ? T001_polygonBounds(result) : resultBounds;
+  }
+  if (result && T001_polygonArea(result) > 0) {
+    result = result.slice().reverse();
+  }
+  return result;
+}
+
+function T001_buildBleedPathFromCut(fillPath) {
+  const points = T001_flattenPathD(fillPath);
+  const offsetPoints = T001_offsetPolygonWithClipper(points, T001_BLEED_OFFSET);
+  return offsetPoints ? T001_polygonToPath(offsetPoints) : '';
+}
+
+function T001_reverseParsedPath(parsed) {
+  const reversed = parsed.segments.slice().reverse().map(segment => {
+    if (segment.type === 'L') {
+      return { type: 'L', from: segment.to, to: segment.from };
+    }
+    return {
+      type: 'C',
+      from: segment.to,
+      c1: segment.c2,
+      c2: segment.c1,
+      to: segment.from
+    };
+  });
+  return {
+    start: parsed.end,
+    end: parsed.start,
+    segments: reversed
+  };
+}
+
+function T001_buildCutFillPath(cutElements) {
+  const paths = cutElements
+    .map(el => T001_parseAbsolutePath(T001_elementToPathD(el)))
+    .filter(path => path.start && path.end && path.segments.length);
+  if (!paths.length) return '';
+
+  const ordered = [paths.shift()];
+  while (paths.length) {
+    const currentEnd = ordered[ordered.length - 1].end;
+    let bestIndex = 0;
+    let bestReverse = false;
+    let bestDistance = Infinity;
+    paths.forEach((path, index) => {
+      const startDistance = T001_distance(currentEnd, path.start);
+      const endDistance = T001_distance(currentEnd, path.end);
+      if (startDistance < bestDistance) {
+        bestDistance = startDistance;
+        bestIndex = index;
+        bestReverse = false;
+      }
+      if (endDistance < bestDistance) {
+        bestDistance = endDistance;
+        bestIndex = index;
+        bestReverse = true;
+      }
+    });
+    const next = paths.splice(bestIndex, 1)[0];
+    ordered.push(bestReverse ? T001_reverseParsedPath(next) : next);
+  }
+
+  const start = ordered[0].start;
+  const segments = [];
+  ordered.forEach((path, index) => {
+    if (index > 0 && T001_distance(segments[segments.length - 1].to, path.start) > 0.02) {
+      segments.push({ type: 'L', from: segments[segments.length - 1].to, to: path.start });
+    }
+    path.segments.forEach(segment => segments.push(segment));
+  });
+  return T001_segmentsToD(start, segments);
+}
+
+function T001_extractSourceElements(sourceSvg) {
+  if (!sourceSvg) return T001_SOURCE_ELEMENTS;
+  const elements = sourceSvg.match(/<(?:path|line|polyline)\b[^>]*>/g) || [];
+  const cutElements = elements.filter(el =>
+    /stroke="#ee3924"/.test(el) &&
+    !/d="M890\.995,303\.869"/.test(el)
+  );
+  const foldElements = elements.filter(el =>
+    /stroke="#(?:263aed|3b53a4)"/.test(el) &&
+    /stroke-dasharray/.test(el)
+  );
+  const bleedElements = elements.filter(el =>
+    /^<path\b/.test(el) &&
+    /stroke="#263aed"/.test(el) &&
+    !/stroke-dasharray/.test(el)
+  );
+
+  if (!cutElements.length || !foldElements.length || !bleedElements.length) {
+    throw new Error('T001 source SVG layer extraction failed.');
+  }
+
+  return { cutElements, foldElements, bleedElement: bleedElements[0] };
+}
+
+function T001_isAuxiliaryCutElement(el) {
+  return /stroke-width="\.5"/.test(el) ||
+    /x1="243\.462"\s+y1="309\.538"/.test(el);
+}
+
+function T001_isAuxiliaryFoldElement(el) {
+  return /x1="243\.653"\s+y1="471\.222"/.test(el);
+}
+
+function T001_isThumbNotchCutElement(el) {
+  return /d="M627\.373,309\.538c1\.527,12\.936/.test(el);
+}
+
+function T001_noNotchCutBridgeElement() {
+  return '<line x1="627.373" y1="309.538" x2="678.397" y2="309.538" fill="none" stroke="#ee3924" stroke-miterlimit="2.613"/>';
+}
+
+function T001_noNotchBleedElement(el) {
+  const d = T001_attr(el, 'd');
+  const noNotchD = d.replace(
+    'h-52.441l-8.115.103-.331,7.403c-1.021,8.649-8.359,15.172-17.067,15.172s-16.045-6.522-17.066-15.171l-.233-7.216-8.212-.292h-52.441',
+    'h-156.036'
+  );
+  return el.replace(/d="[^"]*"/, 'd="' + noNotchD + '"');
+}
+
+function T001_numbersForBounds(el) {
+  if (/^<path\b/.test(el)) {
+    return T001_attr(el, 'd').match(/-?\d+(?:\.\d+)?/g) || [];
+  }
+  if (/^<polyline\b/.test(el)) {
+    return T001_attr(el, 'points').match(/-?\d+(?:\.\d+)?/g) || [];
+  }
+  if (/^<line\b/.test(el)) {
+    return [
+      T001_attr(el, 'x1'),
+      T001_attr(el, 'y1'),
+      T001_attr(el, 'x2'),
+      T001_attr(el, 'y2')
+    ];
+  }
+  return [];
+}
+
+function T001_boundsFromElements(elements) {
+  const xs = [];
+  const ys = [];
+  elements.forEach(el => {
+    const nums = T001_numbersForBounds(el);
+    for (let i = 0; i < nums.length - 1; i += 2) {
+      xs.push(Number(nums[i]));
+      ys.push(Number(nums[i + 1]));
+    }
+  });
+  return {
+    minX: T001_num(Math.min(...xs)),
+    minY: T001_num(Math.min(...ys)),
+    maxX: T001_num(Math.max(...xs)),
+    maxY: T001_num(Math.max(...ys)),
+    width: T001_num(Math.max(...xs) - Math.min(...xs)),
+    height: T001_num(Math.max(...ys) - Math.min(...ys))
+  };
+}
+
+function T001_getLayout(W, D, H, sourceSvg) {
+  const spec = T001_getSpec({ W, D, H });
+  const mapper = T001_createMapper(spec);
+  const sourceElements = T001_extractSourceElements(sourceSvg);
+  const sourceCutElements = sourceElements.cutElements
+    .filter(el => !T001_isAuxiliaryCutElement(el))
+    .filter(el => T001_hasThumbNotch(spec) || !T001_isThumbNotchCutElement(el));
+  if (!T001_hasThumbNotch(spec)) {
+    sourceCutElements.push(T001_noNotchCutBridgeElement());
+  }
+  const sourceBleedElement = T001_hasThumbNotch(spec)
+    ? sourceElements.bleedElement
+    : T001_noNotchBleedElement(sourceElements.bleedElement);
+  const cutElements = sourceCutElements.map(el => T001_transformElement(el, mapper));
+  const foldElements = sourceElements.foldElements
+    .filter(el => !T001_isAuxiliaryFoldElement(el))
+    .map(el => T001_transformElement(el, mapper));
+  const fillPath = T001_buildCutFillPath(cutElements);
+  const offsetBleedPath = T001_buildBleedPathFromCut(fillPath);
+  const bleedElement = offsetBleedPath
+    ? '<path d="' + offsetBleedPath + '" fill="none" stroke="#263aed" stroke-miterlimit="10"/>'
+    : T001_transformElement(sourceBleedElement, mapper);
+  const allElements = [bleedElement].concat(cutElements, foldElements);
+
+  return {
+    spec,
+    grid: spec.grid,
+    cutElements,
+    foldElements,
+    fillPath,
+    bleedElement,
+    labels: T001_buildLabels(spec),
+    bounds: T001_boundsFromElements(allElements)
+  };
+}
+
+function T001_buildLabels(spec) {
+  const g = spec.grid;
+  const lidSideY = g.yBodyTop - spec.D * (28 / 57);
   return [
-    'M ' + P(xP1 + lockAOuterX, yLO),
-    'L ' + P(xP1 + lockStep, yLO),
-    'L ' + P(xP1 + lockStep, yBB + lockStep),
-    'L ' + P(xP1, yBB),
-    'L ' + P(xGlueL, yBB - glueSlope),
-    'L ' + P(xGlueL, yLF + glueSlope),
-    'L ' + P(xP1, yLF),
-    'L ' + P(xP1, yTF),
-    'L ' + P(xP1 + D * (0.634 / 57), tuckStraightTop),
-    'C ' + P(tL2x, tL2y) + ' ' + P(tL1x, tL1y) + ' ' + P(xTFL, yTop),
-    'L ' + P(xTFR, yTop),
-    'C ' + P(tR2x, tR2y) + ' ' + P(tR1x, tR1y) + ' ' + P(xP2 - D * (0.633 / 57), tuckStraightTop),
-    'L ' + P(xP2, yTF),
-    'L ' + P(xP2, y36),
-    'C ' + P(xP2, urCP1y) + ' ' + P(urCP2x, yLF - D * (0.032 / 57)) + ' ' + P(urCP3x, yLF),
-    'C ' + P(urCP4x, yLF + D * (0.025 / 57)) + ' ' + P(urCP5x, urCP5y) + ' ' + P(x35, y35),
-    'L ' + P(sfLFlatR, yLSFTop),
-    'L ' + P(sfLBezEnd, yLSFTop),
-    'C ' + P(sL2x, yLSFTop) + ' ' + P(sL1x, sL1y) + ' ' + P(x28L, y28),
-    'L ' + P(x29L, y29),
-    'L ' + P(x30L, y30),
-    'L ' + P(x30L, yLF),
-    'L ' + P(xNeckL, yLF),
-    'C ' + P(nL2x, nL2y) + ' ' + P(nL1x, nL1y) + ' ' + P(xNeckC, yNeckBot),
-    'C ' + P(nR2x, nR2y) + ' ' + P(nR1x, nR1y) + ' ' + P(xNeckR, yLF),
-    'L ' + P(x30R, yLF),
-    'L ' + P(x30R, y30),
-    'L ' + P(x29R, y29),
-    'L ' + P(x28R, y28),
-    'C ' + P(sR2x, sR2y) + ' ' + P(sR1x, yLSFTop) + ' ' + P(sfRFlatL, yLSFTop),
-    'L ' + P(sfRFlatR, yLSFTop),
-    'L ' + P(xEndCorn, yEndCorn),
-    'L ' + P(xEnd, yLF),
-    'L ' + P(xEnd, yBB),
-    'L ' + P(xP4 + D * (27.003 / 57), yBB + lockLRDiagY),
-    'L ' + P(xP4 + D * (28.975 / 57), yBB + D * (24.574 / 57)),
-    'C ' + P(xP4 + D * (29.272 / 57), yBB + D * (25.489 / 57)) + ' ' + P(xP4 + D * (29.114 / 57), yBB + D * (26.487 / 57)) + ' ' + P(xP4 + D * (28.549 / 57), yBB + D * (27.264 / 57)),
-    'C ' + P(xP4 + D * (27.983 / 57), yBB + D * (28.042 / 57)) + ' ' + P(xP4 + D * (27.083 / 57), yLRFlat) + ' ' + P(xP4 + D * (26.122 / 57), yLRFlat),
-    'L ' + P(xP4 + lockStep, yLRFlat),
-    'L ' + P(xP4 + lockStep, yBB + lockStep),
-    'L ' + P(xP4, yBB),
-    'L ' + P(lbInR, yLRFlat),
-    'L ' + P(lbInR, yBVert),
-    'C ' + P(lbInR, yLO - lockCornerR * (1 - k)) + ' ' + P(lbInR - lockCornerR * (1 - k), yLO) + ' ' + P(lbInR - lockCornerR, yLO),
-    'L ' + P(lbGapR, yLO),
-    'L ' + P(lbGapL, yLO),
-    'L ' + P(lbInL + lockCornerR, yLO),
-    'C ' + P(lbInL + lockCornerR * (1 - k), yLO) + ' ' + P(lbInL, yLO - lockCornerR * (1 - k)) + ' ' + P(lbInL, yBVert),
-    'L ' + P(lbInL, yLRFlat),
-    'L ' + P(xP3, yBB),
-    'L ' + P(xP3 - lockStep, yBB + lockStep),
-    'L ' + P(xP3 - lockStep, yLRFlat),
-    'L ' + P(xP2 + D * (30.949 / 57), yLRFlat),
-    'C ' + P(xP2 + lockLRDiagX, yLRFlat) + ' ' + P(xP2 + D * (29.097 / 57), yBB + D * (28.047 / 57)) + ' ' + P(xP2 + D * (28.531 / 57), yBB + D * (27.276 / 57)),
-    'C ' + P(xP2 + D * (27.965 / 57), yBB + D * (26.506 / 57)) + ' ' + P(xP2 + D * (27.801 / 57), yBB + D * (25.515 / 57)) + ' ' + P(xP2 + D * (28.087 / 57), yBB + D * (24.602 / 57)),
-    'L ' + P(xP2 + lockLRDiagX, yBB + lockLRDiagY),
-    'L ' + P(xP2, yBB),
-    'L ' + P(xP2 - lockStep, yBB + lockStep),
-    'L ' + P(xP2 - lockStep, yLO),
-    'L ' + P(xP2 - lockAOuterX, yLO),
-    'C ' + P(xP2 - lockAOuterX - lockCornerR * k, yLO) + ' ' + P(xP2 - lockAInnerX, yBVert + lockCornerR * k) + ' ' + P(xP2 - lockAInnerX, yBVert),
-    'L ' + P(xP2 - lockAInnerX, yLRFlat),
-    'L ' + P(xP1 + lockAInnerX, yLRFlat),
-    'L ' + P(xP1 + lockAInnerX, yBVert),
-    'C ' + P(xP1 + lockAInnerX, yLO - lockCornerR * (1 - k)) + ' ' + P(xP1 + lockAOuterX + lockCornerR * k, yLO) + ' ' + P(xP1 + lockAOuterX, yLO),
+    { name: 'Glue', x: (g.xGlueL + g.xFrontL) / 2, y: (g.yBodyTop + g.yBodyBottom) / 2 },
+    { name: 'Front', x: (g.xFrontL + g.xFrontR) / 2, y: (g.yBodyTop + g.yBodyBottom) / 2 },
+    { name: 'Side(L)', x: (g.xFrontR + g.xSideLR) / 2, y: (g.yBodyTop + g.yBodyBottom) / 2 },
+    { name: 'Back', x: (g.xSideLR + g.xBackR) / 2, y: (g.yBodyTop + g.yBodyBottom) / 2 },
+    { name: 'Side(R)', x: (g.xBackR + g.xSideRR) / 2, y: (g.yBodyTop + g.yBodyBottom) / 2 },
+    { name: 'Upper Tuck', x: (g.xFrontL + g.xFrontR) / 2, y: (g.yTop + g.yLidFold) / 2 },
+    { name: 'Lid Top', x: (g.xFrontL + g.xFrontR) / 2, y: (g.yLidFold + g.yBodyTop) / 2 },
+    { name: 'Lid Side Flap(L)', x: (g.xFrontR + g.xSideLR) / 2, y: (lidSideY + g.yBodyTop) / 2 },
+    { name: 'Lid Side Flap(R)', x: (g.xBackR + g.xSideRR) / 2, y: (lidSideY + g.yBodyTop) / 2 },
+    { name: 'Bottom Lock A', x: (g.xFrontL + g.xFrontR) / 2, y: (g.yBodyBottom + g.yLockBottom) / 2 },
+    { name: 'Bottom Lock(L)', x: (g.xFrontR + g.xSideLR) / 2, y: (g.yBodyBottom + g.yLockBottom) / 2 },
+    { name: 'Bottom Lock B', x: (g.xSideLR + g.xBackR) / 2, y: (g.yBodyBottom + g.yLockBottom) / 2 },
+    { name: 'Bottom Lock(R)', x: (g.xBackR + g.xSideRR) / 2, y: (g.yBodyBottom + g.yLockBottom) / 2 }
+  ].concat(T001_hasThumbNotch(spec)
+    ? [{ name: 'Thumb Notch', x: (g.xSideLR + g.xBackR) / 2, y: g.yBodyTop + spec.D * (5 / 57) }]
+    : []);
+}
+
+function T001_styleBlock() {
+  return '<style>' +
+    '.cut-area{fill:#ffffff;stroke:none;}' +
+    '.glue-area{fill:#d4d4d4;opacity:0.72;stroke:none;}' +
+    '.cut-fill{fill:none;stroke:#cc0000;stroke-width:0.6;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;}' +
+    '.bleed{fill:none;stroke:#0055ff;stroke-width:0.6;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;}' +
+    '.fold{fill:none;stroke:#1d6fe8;stroke-width:0.45;stroke-dasharray:2.5 2;vector-effect:non-scaling-stroke;}' +
+    '.label{fill:#333;font-family:"Arial Rounded MT Bold","Pretendard","Noto Sans KR",Arial,sans-serif;pointer-events:none;}' +
+    '.dim{fill:#111;font-family:"Arial Rounded MT Bold","Pretendard","Noto Sans KR",Arial,sans-serif;pointer-events:none;}' +
+    '</style>';
+}
+
+function T001_arrowMarkerDef(size) {
+  const s = T001_num(size || 10);
+  const mid = T001_num(s / 2);
+  return '<marker id="arrow" markerWidth="' + s + '" markerHeight="' + s + '" refX="' + mid + '" refY="' + mid + '" orient="auto-start-reverse">' +
+    '<path d="M0,0 L' + s + ',' + mid + ' L0,' + s + ' Z" fill="#111"/></marker>';
+}
+
+function T001_watermarkDef(style) {
+  const wm = style || {};
+  const fontSize = T001_num(wm.watermarkFontSize || 22);
+  const opacity = T001_num(wm.watermarkOpacity || 0.12);
+  return '<pattern id="wm" patternUnits="userSpaceOnUse" width="140" height="100" patternTransform="rotate(-25)">' +
+    '<text x="24" y="60" font-size="' + fontSize + '" font-family="Arial,sans-serif" font-weight="700" fill="#999" opacity="' + opacity + '">PacVu</text>' +
+    '</pattern>';
+}
+
+function T001_clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function T001_visualStyle(layout) {
+  const refW = 256.6;
+  const refH = 304.1;
+  const b = layout && layout.bounds ? layout.bounds : { width: refW, height: refH };
+  const widthScale = refW / Math.max(b.width, 1);
+  const heightScale = refH / Math.max(b.height, 1);
+  const fitScale = Math.min(widthScale, heightScale);
+  const uiScale = T001_clamp(0.82 * Math.pow(fitScale, 0.35), 0.62, 0.82);
+  return {
+    labelFontSize: T001_num(4.5 * uiScale),
+    dimensionFontSize: T001_num(5.5 * uiScale),
+    dimensionLineStroke: T001_num(T001_clamp(0.35 * uiScale, 0.22, 0.29)),
+    dimensionTextOffset: T001_num(6 * uiScale),
+    dimensionVerticalTextOffset: T001_num(5 * uiScale),
+    arrowMarkerSize: T001_num(T001_clamp(10 * uiScale, 5.6, 8.2)),
+    watermarkFontSize: 22,
+    watermarkOpacity: 0.12
+  };
+}
+
+function T001_glueFillPath(grid) {
+  return [
+    'M ' + T001_num(grid.xGlueL) + ' ' + T001_num(grid.yBodyTop),
+    'L ' + T001_num(grid.xFrontL) + ' ' + T001_num(grid.yBodyTop),
+    'L ' + T001_num(grid.xFrontL) + ' ' + T001_num(grid.yBodyBottom),
+    'L ' + T001_num(grid.xGlueL) + ' ' + T001_num(grid.yBodyBottom),
     'Z'
   ].join(' ');
 }
 
-function T001_buildBleedPath_referenceMapLegacy(spec, grid) {
-  const ref = {
-    W: 57,
-    D: 57,
-    H: 177,
-    xFrontL: 25,
-    xFrontR: 82,
-    xSideLR: 139,
-    xBackR: 196,
-    xSideRR: 251.504,
-    yTop: 0,
-    yLidFold: 23,
-    yBodyTop: 80,
-    yBodyBottom: 257,
-    yLockBottom: 300.5
-  };
-  const bleedD = [
-    'M 107.2676,280.7042',
-    'C 106.6986,282.5196 107.0309,284.5188 108.1559,286.0502',
-    'C 109.2816,287.5841 111.0896,288.4996 112.9925,288.4996',
-    'L 113.7756,288.5003',
-    'L 113.7756,288.4996',
-    'L 112.9925,288.4996',
-    'L 139.0451,288.4996',
-    'L 139.0451,262.509',
-    'L 154.5451,286.3878',
-    'L 154.5451,296.4995',
-    'C 154.5451,300.3596 157.6851,303.5 161.5452,303.5',
-    'L 173.5453,303.5',
-    'C 177.405,303.5 180.5454,300.3599 180.5454,296.4995',
-    'L 180.5454,286.3878',
-    'L 196.0451,262.5094',
-    'L 196.0451,288.4996',
-    'L 222.164,288.4996',
-    'C 224.0771,288.4996 225.8914,287.5756 227.0179,286.0266',
-    'C 228.1432,284.4782 228.4618,282.4667 227.8705,280.6467',
-    'L 227.8705,280.6467',
-    'L 226.6094,276.7626',
-    'L 253.1784,259.5154',
-    'L 254.5451,258.5385',
-    'L 254.5451,78.7568',
-    'L 251.9804,76.1929',
-    'L 250.5552,48.9997',
-    'L 210.4366,48.9997',
-    'C 206.8224,48.9997 203.645,51.4381 202.7094,54.9292',
-    'L 199.3552,67.4471',
-    'L 195.045,71.7574',
-    'L 195.045,76.9997',
-    'L 176.545,76.9997',
-    'L 173.6822,77.036',
-    'L 173.5654,79.6476',
-    'C 173.2052,82.6988 170.6165,84.9999 167.5445,84.9999',
-    'C 164.4726,84.9999 161.8842,82.6991 161.524,79.648',
-    'L 161.4419,77.1023',
-    'L 158.5448,76.9993',
-    'L 140.0448,76.9993',
-    'L 140.0448,71.757',
-    'L 135.735,67.4464',
-    'L 132.3808,54.9285',
-    'C 131.4452,51.4374 128.2677,48.999 124.6535,48.999',
-    'L 85.0454,48.999',
-    'L 85.0454,22.9997',
-    'L 84.4069,10.7407',
-    'C 84.0026,3.0353 77.6424,-3.0007 69.9268,-3.0007',
-    'L 37.164,-3.0007',
-    'C 29.4477,-3.0007 23.0875,3.0353 22.6839,10.7407',
-    'L 22.0451,22.921',
-    'L 22.1015,86.1987',
-    'L 22.3992,131.1506',
-    'L 22.1555,216.1216',
-    'L 21.9981,258.802',
-    'L 25.0451,261.2412',
-    'L 25.0451,303.4989',
-    'L 38.5455,303.4989',
-    'C 42.4052,303.4989 45.5453,300.3589 45.5453,296.4984',
-    'L 45.5453,296.4984',
-    'L 45.5453,288.4985',
-    'L 61.5452,288.4985',
-    'L 61.5452,296.4984',
-    'C 61.5452,300.3585 64.6853,303.4989 68.5453,303.4989',
-    'L 82.0454,303.4989',
-    'L 82.0454,261.2412',
-    'L 82.4896,260.797',
-    'L 108.4843,276.8272',
-    'L 107.2687,280.7021'
-  ].join(' ');
-
-  function near(value, anchor) {
-    return Math.abs(value - anchor) <= 3.6;
-  }
-
-  function legacyMapX(x) {
-    if (near(x, ref.xFrontL)) return grid.xFrontL + (x - ref.xFrontL);
-    if (near(x, ref.xFrontR)) return grid.xFrontR + (x - ref.xFrontR);
-    if (near(x, ref.xSideLR)) return grid.xSideLR + (x - ref.xSideLR);
-    if (near(x, ref.xBackR)) return grid.xBackR + (x - ref.xBackR);
-    if (near(x, ref.xSideRR)) return grid.xSideRR + (x - ref.xSideRR);
-    if (x < ref.xFrontL) return grid.xFrontL + (x - ref.xFrontL);
-    if (x < ref.xFrontR) return grid.xFrontL + ((x - ref.xFrontL) / ref.W) * spec.W;
-    if (x < ref.xSideLR) return grid.xFrontR + ((x - ref.xFrontR) / ref.D) * spec.D;
-    if (x < ref.xBackR) return grid.xSideLR + ((x - ref.xSideLR) / ref.W) * spec.W;
-    if (x < ref.xSideRR) return grid.xBackR + ((x - ref.xBackR) / (ref.xSideRR - ref.xBackR)) * (grid.xSideRR - grid.xBackR);
-    return grid.xSideRR + (x - ref.xSideRR);
-  }
-
-  function legacyMapY(y) {
-    if (near(y, ref.yTop)) return grid.yTop + (y - ref.yTop);
-    if (near(y, ref.yLidFold)) return grid.yLidFold + (y - ref.yLidFold);
-    if (near(y, ref.yBodyTop)) return grid.yBodyTop + (y - ref.yBodyTop);
-    if (near(y, ref.yBodyBottom)) return grid.yBodyBottom + (y - ref.yBodyBottom);
-    if (near(y, ref.yLockBottom)) return grid.yLockBottom + (y - ref.yLockBottom);
-    if (y < ref.yLidFold) return grid.yTop + ((y - ref.yTop) / ref.D) * spec.D;
-    if (y < ref.yBodyTop) return grid.yLidFold + ((y - ref.yLidFold) / ref.D) * spec.D;
-    if (y < ref.yBodyBottom) return grid.yBodyTop + ((y - ref.yBodyTop) / ref.H) * spec.H;
-    return grid.yBodyBottom + ((y - ref.yBodyBottom) / ref.D) * spec.D;
-  }
-
-  return bleedD.replace(/-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?/g, pair => {
-    const [x, y] = pair.split(',').map(Number);
-    return T001_point(legacyMapX(x), legacyMapY(y));
+function T001_buildLabelLayer(layout, style) {
+  const visual = style || T001_visualStyle(layout);
+  let out = '  <g id="layer-labels">\n';
+  layout.labels.forEach(label => {
+    out += '    <text class="label" x="' + T001_num(label.x) + '" y="' + T001_num(label.y) +
+      '" font-size="' + visual.labelFontSize + '" text-anchor="middle" dominant-baseline="middle">' + label.name + '</text>\n';
   });
+  out += '  </g>\n';
+  return out;
 }
 
-function T001_buildBleedPath(spec, grid) {
-  const D = spec.D;
-  const {
-    xFrontL: xP1,
-    xFrontR: xP2,
-    xSideLR: xP3,
-    xBackR: xP4,
-    xSideRR: xEnd,
-    yLidFold: yTF,
-    yBodyTop: yLF,
-    yBodyBottom: yBB,
-    yLockBottom: yLO
-  } = grid;
-
-  const P = T001_point;
-  const S = value => D * (value / 57);
-  const b = 3;
-  const k = 0.5523;
-
-  const yLSFTop = yLF - S(28);
-  const yBVert = yBB + S(39.5);
-  const yLRFlat = yBB + S(28.5);
-  const lockStep = S(3);
-  const lockCornerR = S(4);
-  const lockAOuterX = S(13.5);
-  const lockAInnerX = S(17.5);
-  const lockBDiagW = S(18.5);
-  const lockBGapHalf = S(6);
-
-  const xTC = (xP1 + xP2) / 2;
-  const tuckFlatHalf = S(16.381);
-  const xTFL = xTC - tuckFlatHalf;
-  const xTFR = xTC + tuckFlatHalf;
-
-  const xNeckC = (xP3 + xP4) / 2;
-  const neckHalfW = S(9);
-  const xNeckL = xNeckC - neckHalfW;
-  const xNeckR = xNeckC + neckHalfW;
-  const yNeckBot = yLF + S(8);
-  const xNotchInnerR = xNeckC + S(6);
-  const xNotchInnerL = xNeckC - S(6);
-  const yNotchEntry = yLF - b;
-  const yNotchMid = yNeckBot - b;
-  const yNotchShoulder = yLF + S(2.699);
-  let lbInL = xP3 + lockBDiagW;
-  let lbInR = xP4 - lockBDiagW;
-  if (lbInL > lbInR) {
-    lbInL = xNeckC;
-    lbInR = xNeckC;
+function T001_buildDimensionLayer(cfg, grid, style) {
+  const visual = style || T001_visualStyle({ bounds: { width: 256.6, height: 304.1 } });
+  function line(x1, y1, x2, y2, label) {
+    const midX = (x1 + x2) / 2;
+    const midY = (y1 + y2) / 2;
+    return '<line x1="' + T001_num(x1) + '" y1="' + T001_num(y1) + '" x2="' + T001_num(x2) + '" y2="' + T001_num(y2) + '" stroke="#111" stroke-width="' + visual.dimensionLineStroke + '" marker-start="url(#arrow)" marker-end="url(#arrow)"/>' +
+      '<text class="dim" x="' + T001_num(midX) + '" y="' + T001_num(midY + visual.dimensionTextOffset) + '" font-size="' + visual.dimensionFontSize + '" font-weight="600" text-anchor="middle">' + label + '</text>';
   }
-  const lbGapL = Math.min(Math.max(xNeckC - lockBGapHalf, lbInL + lockCornerR), xNeckC);
-  const lbGapR = Math.max(Math.min(xNeckC + lockBGapHalf, lbInR - lockCornerR), xNeckC);
-  const sfRFlatL = xP4 + S(14.395);
-  const sfLFlatR = xP2 + S(5.364);
-  const sfLBezEnd = xP3 - S(14.390);
-  const sL1x = xP3 - S(10.146);
-  const sL1y = yLSFTop + S(1.519);
-  const sL2x = xP3 - S(12.129);
-  const x28L = xP3 - S(9.561);
-  const x29L = xP3 - S(5.998);
-  const x30L = xP3 - S(1.998);
-  const x28R = xP4 + S(9.565);
-  const x29R = xP4 + S(6.003);
-  const x30R = xP4 + S(2.003);
-  const y28 = yLSFTop + S(3.71);
-  const y29 = yLSFTop + S(17);
-  const y30 = yLSFTop + S(21);
-  const sR1x = xP4 + S(12.134);
-  const sR2x = xP4 + S(10.150);
-  const sR2y = yLSFTop + S(1.519);
-
-  function pt(x, y) {
-    return { x, y };
+  function vline(x, y1, y2, label) {
+    const mid = (y1 + y2) / 2;
+    const textX = x + visual.dimensionVerticalTextOffset;
+    return '<line x1="' + T001_num(x) + '" y1="' + T001_num(y1) + '" x2="' + T001_num(x) + '" y2="' + T001_num(y2) + '" stroke="#111" stroke-width="' + visual.dimensionLineStroke + '" marker-start="url(#arrow)" marker-end="url(#arrow)"/>' +
+      '<text class="dim" x="' + T001_num(textX) + '" y="' + T001_num(mid) + '" font-size="' + visual.dimensionFontSize + '" font-weight="600" transform="rotate(-90 ' + T001_num(textX) + ' ' + T001_num(mid) + ')" text-anchor="middle">' + label + '</text>';
   }
-
-  function offsetLine(a, c, distance, side) {
-    const dx = c.x - a.x;
-    const dy = c.y - a.y;
-    const len = Math.sqrt(dx * dx + dy * dy) || 1;
-    const nx = (-dy / len) * side;
-    const ny = (dx / len) * side;
-    return {
-      a: pt(a.x + nx * distance, a.y + ny * distance),
-      c: pt(c.x + nx * distance, c.y + ny * distance),
-      n: pt(nx, ny)
-    };
-  }
-
-  const bottomLockLStart = pt(xP2 + S(28.087) - 2.819, yBB + S(24.602) - 0.898);
-
-  function bottomLockLBleed() {
-    const r0 = pt(xP2 + S(28.087), yBB + S(24.602));
-    const r1 = pt(xP2 + S(27.801), yBB + S(25.515));
-    const r2 = pt(xP2 + S(27.965), yBB + S(26.506));
-    const r3 = pt(xP2 + S(28.531), yBB + S(27.276));
-    const r4 = pt(xP2 + S(29.097), yBB + S(28.047));
-    const r5 = pt(xP2 + S(30), yLRFlat);
-    const r6 = pt(xP2 + S(30.949), yLRFlat);
-    const curveStartDx = -2.819;
-    const curveStartDy = -0.898;
-    const anchorBlend = Math.min(1, Math.max(0, (D - 57) / 143));
-    const mixPt = (from, to) => pt(
-      from.x + (to.x - from.x) * anchorBlend,
-      from.y + (to.y - from.y) * anchorBlend
-    );
-    const flatEnd = mixPt(
-      pt(xP3 - S(25.224), yLRFlat + b),
-      pt(xP3 - 6.986, yLRFlat + b)
-    );
-    const stepBottom = mixPt(
-      pt(xP3, yLRFlat + b),
-      pt(xP3 - 7.169, yBB + 12.003)
-    );
-    const diagTop = mixPt(
-      pt(xP3, yBB + b + 2.509),
-      pt(xP3, yBB + 5.242)
-    );
-    return [
-      'M ' + P(bottomLockLStart.x, bottomLockLStart.y),
-      'C ' + P(r1.x + curveStartDx, r1.y + curveStartDy) + ' ' + P(r2.x - 2.650, r2.y + 0.400) + ' ' + P(r3.x - 2.350, r3.y + 1.300),
-      'C ' + P(r4.x - 1.900, r4.y + 2.100) + ' ' + P(r5.x - 0.950, r5.y + 2.900) + ' ' + P(r6.x + 0.044, r6.y + b),
-      'L ' + P(flatEnd.x, flatEnd.y),
-      'L ' + P(stepBottom.x, stepBottom.y),
-      'L ' + P(diagTop.x, diagTop.y)
-    ];
-  }
-
-  function bottomLockBBleed() {
-    const rightJoinBlend = Math.min(1, Math.max(0, (D - 57) / 143));
-    const rightJoinPt = (from, to) => pt(
-      from.x + (to.x - from.x) * rightJoinBlend,
-      from.y + (to.y - from.y) * rightJoinBlend
-    );
-    const rightJoinStep = rightJoinPt(
-      pt(xP4, yBB + b + 2.510),
-      pt(xP4 + 7.315, yBB + 11.638)
-    );
-    const rightJoinVertical = rightJoinPt(
-      pt(xP4, yLRFlat + b),
-      pt(xP4 + 7.133, yLRFlat + b)
-    );
-    return [
-      'L ' + P(lbInL - b, yLRFlat + 0.888),
-      'L ' + P(lbInL - b, yBVert),
-      'C ' + P(lbInL - b, yBVert + (lockCornerR + b) * k) + ' ' + P(lbInL + lockCornerR - (lockCornerR + b) * k, yLO + b) + ' ' + P(lbInL + lockCornerR, yLO + b),
-      'L ' + P(lbGapL, yLO + b),
-      'L ' + P(lbGapR, yLO + b),
-      'L ' + P(lbInR - lockCornerR, yLO + b),
-      'C ' + P(lbInR - lockCornerR + (lockCornerR + b) * k, yLO + b) + ' ' + P(lbInR + b, yBVert + (lockCornerR + b) * k) + ' ' + P(lbInR + b, yBVert),
-      'L ' + P(lbInR + b, yLRFlat + 0.888),
-      'L ' + P(xP4, yBB + b + 2.510),
-      'L ' + P(rightJoinStep.x, rightJoinStep.y),
-      'L ' + P(rightJoinVertical.x, rightJoinVertical.y)
-    ];
-  }
-
-  function bottomLockRBleed() {
-    const r0 = pt(xP4 + S(26.122), yLRFlat);
-    const r1 = pt(xP4 + S(27.083), yLRFlat);
-    const r2 = pt(xP4 + S(27.983), yBB + S(28.042));
-    const r3 = pt(xP4 + S(28.549), yBB + S(27.264));
-    const r4 = pt(xP4 + S(29.114), yBB + S(26.487));
-    const r5 = pt(xP4 + S(29.272), yBB + S(25.489));
-    const r6 = pt(xP4 + S(28.975), yBB + S(24.574));
-    const lockRBlend = Math.min(1, Math.max(0, (D - 57) / 143));
-    const lockRPt = (from, to) => pt(
-      from.x + (to.x - from.x) * lockRBlend,
-      from.y + (to.y - from.y) * lockRBlend
-    );
-    const curve2C2 = lockRPt(
-      pt(r5.x + 3.190, r5.y - 0.022),
-      pt(xP4 + 105.683, yBB + 87.568)
-    );
-    const curve2End = lockRPt(
-      pt(r6.x + 2.896, r6.y - 0.927),
-      pt(xP4 + 104.347, yBB + 83.453)
-    );
-    const curve3C1 = lockRPt(
-      pt(xEnd - S(24.224), yLRFlat - S(6.673)),
-      pt(xP4 + 103.251, yBB + 76.874)
-    );
-    const curve3End = lockRPt(
-      pt(xEnd - S(24.894), yLRFlat - S(8.737)),
-      pt(xP4 + 98.317, yBB + 65.727)
-    );
-    return [
-      'L ' + P(r0.x + 0.042, r0.y + b),
-      'C ' + P(r1.x + 0.994, r1.y + b) + ' ' + P(r2.x + 1.909, r2.y + 2.534) + ' ' + P(r3.x + 2.469, r3.y + 1.763),
-      'C ' + P(r4.x + 3.029, r4.y + 0.992) + ' ' + P(curve2C2.x, curve2C2.y) + ' ' + P(curve2End.x, curve2End.y),
-      'C ' + P(curve3C1.x, curve3C1.y) + ' ' + P(curve3End.x, curve3End.y) + ' ' + P(curve3End.x, curve3End.y),
-      'L ' + P(xEnd + 1.675, yBB + b - 0.484),
-      'L ' + P(xEnd + 3.041, yBB + b - 1.461)
-    ];
-  }
-
-  function sideRAndLidSideFlapRBleed() {
-    const flapRBlend = Math.min(1, Math.max(0, (D - 57) / 143));
-    const flapRPt = (from, to) => pt(
-      from.x + (to.x - from.x) * flapRBlend,
-      from.y + (to.y - from.y) * flapRBlend
-    );
-    const sideRStep = flapRPt(
-      pt(xEnd + 0.477, yLF - b - 0.807),
-      pt(xEnd - 6.248, yLF - 10.527)
-    );
-    const sideRTop = flapRPt(
-      pt(xEnd - 0.949, yLSFTop - b),
-      pt(xEnd - 10.732, yLSFTop - b)
-    );
-    return [
-      'L ' + P(xEnd + 3.041, yLF - 1.243),
-      'L ' + P(sideRStep.x, sideRStep.y),
-      'L ' + P(sideRTop.x, sideRTop.y),
-      'L ' + P(sfRFlatL - b, yLSFTop - b),
-      'C ' + P(sR1x - 1.311, yLSFTop - b) + ' ' + P(sR2x - 2.505, sR2y - 2.081) + ' ' + P(x28R - 2.855, y28 - 0.781),
-      'L ' + P(x29R - 2.648, y29 - 1.553),
-      'L ' + P(x30R - 2.958, y30 - 1.243),
-      'L ' + P(x30R - 2.958, yLF - b)
-    ];
-  }
-
-  function thumbNotchBleed() {
-    const notchBlend = Math.min(1, Math.max(0, (D - 57) / 143));
-    const notchPt = (from, to) => pt(
-      from.x + (to.x - from.x) * notchBlend,
-      from.y + (to.y - from.y) * notchBlend
-    );
-    const notchRTop = notchPt(
-      pt(xNeckR, yLF - b),
-      pt(xNeckC + 28.945, yLF - b)
-    );
-    const notchREntry = notchPt(
-      pt(xNotchInnerR + 0.182, yNotchEntry),
-      pt(xNeckC + 28.945, yLF - b)
-    );
-    const notchRShoulder = notchPt(
-      pt(xNotchInnerR, yLF - 0.352),
-      pt(xNeckC + 28.396, yLF + 1.541)
-    );
-    const notchRC1 = notchPt(
-      pt(xNotchInnerR - 0.295, yNotchShoulder),
-      pt(xNeckC + 27.939, yLF + 14.332)
-    );
-    const notchRC2 = notchPt(
-      pt(xNotchInnerR - S(2.883), yNotchMid),
-      pt(xNeckC + 10.811, yLF + 26.247)
-    );
-    const notchMid = notchPt(
-      pt(xNeckC, yNotchMid),
-      pt(xNeckC - 0.110, yLF + 25.661)
-    );
-    const notchLC1 = notchPt(
-      pt(xNotchInnerL + S(2.973), yNotchMid),
-      pt(xNeckC - 18.841, yLF + 24.656)
-    );
-    const notchLC2 = notchPt(
-      pt(xNotchInnerL + 0.385, yNotchShoulder),
-      pt(xNeckC - 28.049, yLF + 9.535)
-    );
-    const notchLShoulder = notchPt(
-      pt(xNotchInnerL, yLF - 0.352),
-      pt(xNeckC - 28.434, yLF - 0.287)
-    );
-    const notchLExit = notchPt(
-      pt(xNotchInnerL, yNotchEntry + 0.102),
-      pt(xNeckC - 28.528, yLF - 2.922)
-    );
-    const notchLTop = notchPt(
-      pt(xNeckL, yLF - b),
-      pt(xNeckC - 48.626, yLF - b)
-    );
-    return [
-      'L ' + P(notchRTop.x, notchRTop.y),
-      'L ' + P(notchREntry.x, notchREntry.y),
-      'L ' + P(notchRShoulder.x, notchRShoulder.y),
-      'C ' + P(notchRC1.x, notchRC1.y) + ' ' + P(notchRC2.x, notchRC2.y) + ' ' + P(notchMid.x, notchMid.y),
-      'C ' + P(notchLC1.x, notchLC1.y) + ' ' + P(notchLC2.x, notchLC2.y) + ' ' + P(notchLShoulder.x, notchLShoulder.y),
-      'L ' + P(notchLExit.x, notchLExit.y),
-      'L ' + P(notchLTop.x, notchLTop.y)
-    ];
-  }
-
-  function lidSideFlapLBleed() {
-    const flapLBlend = Math.min(1, Math.max(0, (D - 57) / 143));
-    const flapLPt = (from, to) => pt(
-      from.x + (to.x - from.x) * flapLBlend,
-      from.y + (to.y - from.y) * flapLBlend
-    );
-    const upperRightJoinTop = flapLPt(
-      pt(sfLFlatR - 2.318, yLSFTop - b),
-      pt(xP2 + 3.449, yLSFTop - b)
-    );
-    const upperRightJoinFold = flapLPt(
-      pt(sfLFlatR - 2.318, yTF),
-      pt(xP2 + 3.097, yTF)
-    );
-    return [
-      'L ' + P(x30L + 3.043, yLF - b),
-      'L ' + P(x30L + 3.043, y30 - 1.243),
-      'L ' + P(x29L + 2.733, y29 - 1.554),
-      'L ' + P(x28L + 2.942, y28 - 0.781),
-      'C ' + P(sL1x + 2.591, sL1y - 2.081) + ' ' + P(sL2x + 1.397, yLSFTop - b) + ' ' + P(sfLBezEnd + 0.044, yLSFTop - b),
-      'L ' + P(upperRightJoinTop.x, upperRightJoinTop.y),
-      'L ' + P(upperRightJoinFold.x, upperRightJoinFold.y)
-    ];
-  }
-
-  function upperTuckBleed() {
-    const upperBlend = Math.min(1, Math.max(0, (D - 57) / 143));
-    if (upperBlend <= 0) {
-      return [
-        'L ' + P(xP2 + 2.407, S(10.741)),
-        'C ' + P(xP2 + S(2.003), S(3.035)) + ' ' + P(xP2 - S(6), -b) + ' ' + P(xTFR, -b),
-        'L ' + P(xTFL, -b),
-        'C ' + P(xP1 + S(6.001), -b) + ' ' + P(xP1 - 1.912, S(3.035)) + ' ' + P(xP1 - 2.316, S(10.741)),
-        'L ' + P(xP1 - 2.955, yTF),
-        'L ' + P(xP1 - b, yTF)
-      ];
-    }
-    const upperPt = (from, to) => pt(
-      from.x + (to.x - from.x) * upperBlend,
-      from.y + (to.y - from.y) * upperBlend
-    );
-    const rightStart = upperPt(
-      pt(xP2 + 2.407, S(10.741)),
-      pt(xP2 + 2.480, S(12.058))
-    );
-    const rightC1 = upperPt(
-      pt(xP2 + S(2.003), S(3.035)),
-      pt(xP2 + 2.393, S(10.507))
-    );
-    const rightC2 = upperPt(
-      pt(xP2 + S(1.200), S(2.000)),
-      pt(xP2 + 1.262, S(8.971))
-    );
-    const rightMid = upperPt(
-      pt(xP2 + S(0.500), S(1.000)),
-      pt(xP2 - 0.960, S(7.555))
-    );
-    const rightC3 = upperPt(
-      pt(xP2 - S(2.000), S(0.200)),
-      pt(xP2 - 11.576, S(0.792))
-    );
-    const rightC4 = upperPt(
-      pt(xP2 - S(6), -b),
-      pt(xP2 - 29.325, S(-0.084))
-    );
-    return [
-      'L ' + P(rightStart.x, rightStart.y),
-      'C ' + P(rightC1.x, rightC1.y) + ' ' + P(rightC2.x, rightC2.y) + ' ' + P(rightMid.x, rightMid.y),
-      'C ' + P(rightC3.x, rightC3.y) + ' ' + P(rightC4.x, rightC4.y) + ' ' + P(xTFR, -b),
-      'L ' + P(xTFL, -b),
-      'C ' + P(xP1 + S(6.001), -b) + ' ' + P(xP1 - 1.912, S(3.035)) + ' ' + P(xP1 - 2.316, S(10.741)),
-      'L ' + P(xP1 - 2.955, yTF),
-      'L ' + P(xP1 - b, yTF)
-    ];
-  }
-
-  function glueBleed() {
-    const leftOuterBleedX = xP1 + lockStep - b;
-    return [
-      'L ' + P(xP1 - b, yBB),
-      'L ' + P(leftOuterBleedX, yBB + lockStep + 1.242),
-      'L ' + P(leftOuterBleedX, yLO + b)
-    ];
-  }
-
-  function bottomLockABleed() {
-    const bleedCornerR = lockCornerR + b;
-    const leftOuterX = xP1 + lockAOuterX;
-    const leftInnerX = xP1 + lockAInnerX;
-    const rightOuterX = xP2 - lockAOuterX;
-    const rightInnerX = xP2 - lockAInnerX;
-
-    const leftBottom = pt(leftOuterX, yLO + b);
-    const leftCp1 = pt(leftOuterX + bleedCornerR * k, yLO + b);
-    const leftCp2 = pt(leftInnerX + b, yBVert + bleedCornerR * k);
-    const leftInner = pt(leftInnerX + b, yBVert);
-    const leftTop = pt(xP1 + lockAInnerX + 3.045, yLRFlat + b);
-
-    const rightTop = pt(xP2 - lockAInnerX - 2.955, yLRFlat + b);
-    const rightInner = pt(rightInnerX - b, yBVert);
-    const rightCp1 = pt(rightInnerX - b, yBVert + bleedCornerR * k);
-    const rightCp2 = pt(rightOuterX - bleedCornerR * k, yLO + b);
-    const rightBottom = pt(rightOuterX, yLO + b);
-    const rightOuterBleedX = xP2 - lockStep + b;
-    const joinBlend = Math.min(1, Math.max(0, (D - 57) / 143));
-    const joinPt = (from, to) => pt(
-      from.x + (to.x - from.x) * joinBlend,
-      from.y + (to.y - from.y) * joinBlend
-    );
-    const joinBottom = joinPt(
-      pt(rightOuterBleedX, yLO + b),
-      pt(xP2 - 6.715, yLO + b - 0.179)
-    );
-    const joinVerticalTop = joinPt(
-      pt(rightOuterBleedX, yBB + lockStep + 1.242),
-      pt(xP2 - 6.715, yBB + 11.821)
-    );
-    const joinStep = joinPt(
-      pt(rightOuterBleedX + 0.490, yBB + lockStep + 0.798),
-      pt(xP2 + 0.489, yBB + 3.802)
-    );
-    const diagJoin = joinPt(
-      pt(xP2 + S(26.484), yLRFlat - S(8.672)),
-      pt(xP2 + 100.732, yBB + 66.641)
-    );
-
-    return [
-      'L ' + P(leftBottom.x, leftBottom.y),
-      'C ' + P(leftCp1.x, leftCp1.y) + ' ' + P(leftCp2.x, leftCp2.y) + ' ' + P(leftInner.x, leftInner.y),
-      'L ' + P(leftTop.x, leftTop.y),
-      'L ' + P(rightTop.x, rightTop.y),
-      'L ' + P(rightInner.x, rightInner.y),
-      'C ' + P(rightCp1.x, rightCp1.y) + ' ' + P(rightCp2.x, rightCp2.y) + ' ' + P(rightBottom.x, rightBottom.y),
-      'L ' + P(joinBottom.x, joinBottom.y),
-      'L ' + P(joinVerticalTop.x, joinVerticalTop.y),
-      'L ' + P(joinStep.x, joinStep.y),
-      'L ' + P(diagJoin.x, diagJoin.y),
-      'L ' + P(bottomLockLStart.x, bottomLockLStart.y)
-    ];
-  }
-
-  return [
-    bottomLockLBleed,
-    bottomLockBBleed,
-    bottomLockRBleed,
-    sideRAndLidSideFlapRBleed,
-    thumbNotchBleed,
-    lidSideFlapLBleed,
-    upperTuckBleed,
-    glueBleed,
-    bottomLockABleed
-  ].flatMap(buildSegment => buildSegment()).join(' ');
+  const dimY = grid.yBodyTop + cfg.H * 0.65;
+  return '  <g id="layer-dimensions">' +
+    line(grid.xFrontL, dimY, grid.xFrontR, dimY, 'W ' + cfg.W + 'mm') +
+    line(grid.xFrontR, dimY, grid.xSideLR, dimY, 'D ' + cfg.D + 'mm') +
+    vline(grid.xFrontR - Math.min(12, cfg.W * 0.15), grid.yBodyTop, grid.yBodyBottom, 'H ' + cfg.H + 'mm') +
+    '</g>\n';
 }
 
-function T001_buildFoldLines(spec, grid) {
-  const D = spec.D;
-  const fe = D * (0.3 / 57);
-  const fe2 = D * (2.3 / 57);
-  const {
-    xFrontL: xP1,
-    xFrontR: xP2,
-    xSideLR: xP3,
-    xBackR: xP4,
-    xSideRR: xEnd,
-    yLidFold: yTF,
-    yBodyTop: yLF,
-    yBodyBottom: yBB
-  } = grid;
+function T001_renderSVG(cfg, appState) {
+  const layout = T001_getLayout(cfg.W, cfg.D, cfg.H);
+  const visual = T001_visualStyle(layout);
+  const pad = 80;
+  const vbX = layout.bounds.minX - pad;
+  const vbY = layout.bounds.minY - pad;
+  const vbW = layout.bounds.width + pad * 2;
+  const vbH = layout.bounds.height + pad * 2;
 
-  return [
-    { id: 'fold-sideR-bottomLockR', x1: xEnd - fe, y1: yBB, x2: xP4 + fe, y2: yBB, axis: 'x' },
-    { id: 'fold-back-bottomLockB', x1: xP4 - fe, y1: yBB, x2: xP3 + fe, y2: yBB, axis: 'x' },
-    { id: 'fold-sideL-bottomLockL', x1: xP3 - fe, y1: yBB, x2: xP2 + fe, y2: yBB, axis: 'x' },
-    { id: 'fold-front-bottomLockA', x1: xP2 - fe, y1: yBB, x2: xP1 + fe, y2: yBB, axis: 'x' },
-    { id: 'fold-back-sideR', x1: xP4, y1: yLF + fe, x2: xP4, y2: yBB - fe, axis: 'y' },
-    { id: 'fold-front-sideL', x1: xP2, y1: yLF + fe, x2: xP2, y2: yBB - fe, axis: 'y' },
-    { id: 'fold-sideL-back', x1: xP3, y1: yLF + fe, x2: xP3, y2: yBB - fe, axis: 'y' },
-    { id: 'fold-glue-front', x1: xP1, y1: yLF + fe, x2: xP1, y2: yBB - fe, axis: 'y' },
-    { id: 'fold-sideR-lidSideFlapR', x1: xEnd - fe, y1: yLF, x2: xP4 + fe2, y2: yLF, axis: 'x' },
-    { id: 'fold-sideL-lidSideFlapL', x1: xP3 - fe2, y1: yLF, x2: xP2 + fe2, y2: yLF, axis: 'x' },
-    { id: 'fold-front-lidTop', x1: xP2 - fe, y1: yLF - D * (1 / 57), x2: xP1 + fe, y2: yLF - D * (1 / 57), axis: 'x' },
-    { id: 'fold-lidTop-upperTuck', x1: xP2 - fe, y1: yTF, x2: xP1 + fe, y2: yTF, axis: 'x' }
-  ];
+  let svg = '<svg id="mainSvg" xmlns="http://www.w3.org/2000/svg" viewBox="' +
+    T001_num(vbX) + ' ' + T001_num(vbY) + ' ' + T001_num(vbW) + ' ' + T001_num(vbH) +
+    '" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">\n';
+  svg += '<defs>' + T001_arrowMarkerDef(visual.arrowMarkerSize) + T001_watermarkDef(visual) + T001_styleBlock() + '</defs>\n';
+  svg += '<rect x="' + T001_num(vbX) + '" y="' + T001_num(vbY) + '" width="' + T001_num(vbW) + '" height="' + T001_num(vbH) + '" fill="#d0d0d0" stroke="none"/>\n';
+  svg += '<g id="viewportGroup">\n';
+  svg += '  <g id="layer-fill"><path class="cut-area" d="' + layout.fillPath + '"/></g>\n';
+  svg += '  <g id="layer-glue-fill"><path class="glue-area" d="' + T001_glueFillPath(layout.grid) + '"/></g>\n';
+  svg += '  <g id="layer-bleed">' + T001_restyleElement(layout.bleedElement, 'bleed') + '</g>\n';
+  svg += '  <g id="layer-cut">' + layout.cutElements.map(el => T001_restyleElement(el, 'cut-fill')).join('') + '</g>\n';
+  if (!appState || appState.showFolds) {
+    svg += '  <g id="layer-fold">' + layout.foldElements.map(el => T001_restyleElement(el, 'fold')).join('') + '</g>\n';
+  }
+  if (!appState || appState.showLabels) {
+    svg += T001_buildLabelLayer(layout, visual);
+  }
+  if (!appState || appState.showDims) {
+    svg += T001_buildDimensionLayer(cfg, layout.grid, visual);
+  }
+  svg += '  <rect x="-5000" y="-5000" width="10000" height="10000" fill="url(#wm)" pointer-events="none"/>\n';
+  svg += '</g></svg>';
+  return svg;
 }
 
-function T001_getPathBounds(paths, foldLines) {
-  const xs = [];
-  const ys = [];
-  paths.forEach(path => {
-    const nums = path.match(/-?\d+(?:\.\d+)?/g) || [];
-    for (let i = 0; i < nums.length - 1; i += 2) {
-      xs.push(+nums[i]);
-      ys.push(+nums[i + 1]);
-    }
-  });
-  foldLines.forEach(line => {
-    xs.push(line.x1, line.x2);
-    ys.push(line.y1, line.y2);
-  });
-  return {
-    minX: T001_round(Math.min(...xs)),
-    minY: T001_round(Math.min(...ys)),
-    maxX: T001_round(Math.max(...xs)),
-    maxY: T001_round(Math.max(...ys)),
-    width: T001_round(Math.max(...xs) - Math.min(...xs)),
-    height: T001_round(Math.max(...ys) - Math.min(...ys))
-  };
+function T001_buildExportSVG(cfg) {
+  const layout = T001_getLayout(cfg.W, cfg.D, cfg.H);
+  const pad = 5;
+  const vbX = layout.bounds.minX - pad;
+  const vbY = layout.bounds.minY - pad;
+  const vbW = layout.bounds.width + pad * 2;
+  const vbH = layout.bounds.height + pad * 2;
+  let out = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  out += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + T001_num(vbX) + ' ' + T001_num(vbY) + ' ' + T001_num(vbW) + ' ' + T001_num(vbH) + '" width="' + T001_num(vbW) + 'mm" height="' + T001_num(vbH) + 'mm">\n';
+  out += '<defs>' + T001_styleBlock() + '</defs>\n';
+  out += '<g id="layer-bleed">' + T001_restyleElement(layout.bleedElement, 'bleed') + '</g>\n';
+  out += '<g id="layer-cut">' + layout.cutElements.map(el => T001_restyleElement(el, 'cut-fill')).join('') + '</g>\n';
+  out += '<g id="layer-fold">' + layout.foldElements.map(el => T001_restyleElement(el, 'fold')).join('') + '</g>\n';
+  out += '</svg>';
+  return out;
 }
 
-function T001_getLayout(W, D, H) {
-  const spec = T001_getSpec({ W, D, H });
-  const grid = T001_getGrid(spec);
-  const outerPath = T001_buildOuterPath(spec, grid);
-  const bleedPath = T001_buildBleedPath(spec, grid);
-  const foldLines = T001_buildFoldLines(spec, grid);
-  const xBackC = (grid.xSideLR + grid.xBackR) / 2;
-
-  const notchSegment = {
-    id: 'thumbNotch',
-    type: 'notch',
-    parentPanel: 'back',
-    centerX: T001_round(xBackC),
-    y: T001_round(grid.yBodyTop),
-    width: T001_round(D * (18 / 57)),
-    depth: T001_round(D * (8 / 57))
-  };
-
-  return {
-    spec,
-    grid,
-    cutPath: outerPath,
-    closedOuterPath: outerPath,
-    bleedPath,
-    cutPaths: [outerPath],
-    cutSegments: [{ id: 'cutPath', type: 'outer', path: outerPath }],
-    notchSegment,
-    foldLines,
-    referencePoints: [],
-    panels: [],
-    labels: [],
-    bounds: T001_getPathBounds([outerPath], foldLines)
-  };
+function T001_buildDXF() {
+  return '';
 }
