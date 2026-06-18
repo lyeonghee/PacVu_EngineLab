@@ -44,8 +44,58 @@ function R003_getLayout(W, D, H) {
   ];
 
   function pt(x, y) {
-    var t = spec.transform;
-    return { x: x * t.a + t.e, y: y * t.d + t.f };
+    return { x: spec.mapX(x), y: spec.mapY(y) };
+  }
+
+  function transformPathD(d) {
+    var currentX = 0;
+    var currentY = 0;
+    var tokens = d.match(/[MLHVZmlhvz]|-?\d*\.?\d+(?:e[-+]?\d+)?/ig) || [];
+    var out = [];
+    var i = 0;
+
+    function isCommand(token) {
+      return /^[MLHVZmlhvz]$/.test(token);
+    }
+
+    function n(value) {
+      return (+value).toFixed(4).replace(/\.?0+$/, '');
+    }
+
+    while (i < tokens.length) {
+      var cmd = tokens[i++];
+
+      if (!isCommand(cmd)) {
+        throw new Error('R003 path command expected near token: ' + cmd);
+      }
+
+      if (cmd === 'M' || cmd === 'L') {
+        var isMove = cmd === 'M';
+        while (i + 1 < tokens.length && !isCommand(tokens[i])) {
+          currentX = parseFloat(tokens[i++]);
+          currentY = parseFloat(tokens[i++]);
+          var p = pt(currentX, currentY);
+          out.push((isMove ? 'M' : 'L') + n(p.x) + ',' + n(p.y));
+          isMove = false;
+        }
+      } else if (cmd === 'H') {
+        while (i < tokens.length && !isCommand(tokens[i])) {
+          currentX = parseFloat(tokens[i++]);
+          out.push('L' + n(spec.mapX(currentX)) + ',' + n(spec.mapY(currentY)));
+        }
+      } else if (cmd === 'V') {
+        while (i < tokens.length && !isCommand(tokens[i])) {
+          currentY = parseFloat(tokens[i++]);
+          out.push('L' + n(spec.mapX(currentX)) + ',' + n(spec.mapY(currentY)));
+        }
+      } else if (cmd === 'Z') {
+        out.push('Z');
+      } else {
+        throw new Error('Unsupported R003 path command: ' + cmd);
+      }
+    }
+
+    return out.join(' ');
   }
 
   function box(name, x1, y1, x2, y2) {
@@ -97,9 +147,13 @@ function R003_getLayout(W, D, H) {
 
   return {
     cutPaths: cutPaths,
+    cutPathsMm: cutPaths.map(transformPathD),
     bleedPathD: bleedPathD,
+    bleedPathDMm: transformPathD(bleedPathD),
     glueFillPathD: glueFillPathD,
+    glueFillPathDMm: transformPathD(glueFillPathD),
     panelFillPaths: panelFillPaths,
+    panelFillPathsMm: panelFillPaths.map(transformPathD),
     foldLines: transformedFoldLines,
     labels: labels,
     panelBoxes: panelBoxes,

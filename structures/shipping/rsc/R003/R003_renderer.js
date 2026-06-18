@@ -5,14 +5,12 @@
 
 function R003_renderSVG(cfg, appState) {
   var layout = R003_getLayout(cfg.W, cfg.D, cfg.H);
-  var t = layout.transform;
   var pad = 80;
   var vbX = layout.bounds.minX - pad;
   var vbY = layout.bounds.minY - pad;
   var vbW = layout.bounds.width + pad * 2;
   var vbH = layout.bounds.height + pad * 2;
   var N = function(v) { return (+v).toFixed(4); };
-  var matrix = 'matrix(' + [t.a, t.b, t.c, t.d, t.e, t.f].map(N).join(' ') + ')';
 
   var svg = '<svg id="mainSvg" xmlns="http://www.w3.org/2000/svg"' +
     ' viewBox="' + N(vbX) + ' ' + N(vbY) + ' ' + N(vbW) + ' ' + N(vbH) + '"' +
@@ -35,15 +33,15 @@ function R003_renderSVG(cfg, appState) {
 
   svg += '  <rect x="' + N(vbX) + '" y="' + N(vbY) + '" width="' + N(vbW) + '" height="' + N(vbH) + '" fill="#d0d0d0" stroke="none"/>\n';
   svg += '  <g id="viewportGroup">\n';
-  svg += '    <g id="layer-panel-fill" transform="' + matrix + '">\n';
-  layout.panelFillPaths.forEach(function(d) {
+  svg += '    <g id="layer-panel-fill">\n';
+  layout.panelFillPathsMm.forEach(function(d) {
     svg += '      <path class="panel" d="' + d + '"/>\n';
   });
   svg += '    </g>\n';
-  svg += '    <g id="layer-glue" transform="' + matrix + '"><path class="glue" d="' + layout.glueFillPathD + '"/></g>\n';
-  svg += '    <g id="layer-bleed" transform="' + matrix + '"><path class="bleed" d="' + layout.bleedPathD + '"/></g>\n';
-  svg += '    <g id="layer-cut" transform="' + matrix + '">\n';
-  layout.cutPaths.forEach(function(d) {
+  svg += '    <g id="layer-glue"><path class="glue" d="' + layout.glueFillPathDMm + '"/></g>\n';
+  svg += '    <g id="layer-bleed"><path class="bleed" d="' + layout.bleedPathDMm + '"/></g>\n';
+  svg += '    <g id="layer-cut">\n';
+  layout.cutPathsMm.forEach(function(d) {
     svg += '      <path class="thomson" d="' + d + '"/>\n';
   });
   svg += '    </g>\n';
@@ -97,26 +95,24 @@ function R003_renderSVG(cfg, appState) {
 
 function R003_buildExportSVG(cfg) {
   var layout = R003_getLayout(cfg.W, cfg.D, cfg.H);
-  var t = layout.transform;
   var pad = 5;
   var vbX = layout.bounds.minX - pad;
   var vbY = layout.bounds.minY - pad;
   var vbW = layout.bounds.width + pad * 2;
   var vbH = layout.bounds.height + pad * 2;
   var N = function(v) { return (+v).toFixed(4); };
-  var matrix = 'matrix(' + [t.a, t.b, t.c, t.d, t.e, t.f].map(N).join(' ') + ')';
 
   var out = '<?xml version="1.0" encoding="UTF-8"?>\n';
   out += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + N(vbX) + ' ' + N(vbY) + ' ' + N(vbW) + ' ' + N(vbH) + '" width="' + N(vbW) + 'mm" height="' + N(vbH) + 'mm">\n';
-  out += '  <g id="layer-panel-fill" transform="' + matrix + '">\n';
-  layout.panelFillPaths.forEach(function(d) {
+  out += '  <g id="layer-panel-fill">\n';
+  layout.panelFillPathsMm.forEach(function(d) {
     out += '    <path style="fill:#ffffff;stroke:none;" d="' + d + '"/>\n';
   });
   out += '  </g>\n';
-  out += '  <g id="layer-glue" transform="' + matrix + '"><path style="fill:#d9d9d9;stroke:none;opacity:0.95;" d="' + layout.glueFillPathD + '"/></g>\n';
-  out += '  <g id="layer-bleed" transform="' + matrix + '"><path style="fill:none;stroke:#0055ff;stroke-width:0.55;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;" d="' + layout.bleedPathD + '"/></g>\n';
-  out += '  <g id="layer-cut" transform="' + matrix + '">\n';
-  layout.cutPaths.forEach(function(d) {
+  out += '  <g id="layer-glue"><path style="fill:#d9d9d9;stroke:none;opacity:0.95;" d="' + layout.glueFillPathDMm + '"/></g>\n';
+  out += '  <g id="layer-bleed"><path style="fill:none;stroke:#0055ff;stroke-width:0.55;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;" d="' + layout.bleedPathDMm + '"/></g>\n';
+  out += '  <g id="layer-cut">\n';
+  layout.cutPathsMm.forEach(function(d) {
     out += '    <path style="fill:none;stroke:#cc0000;stroke-width:0.55;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;" d="' + d + '"/>\n';
   });
   out += '  </g>\n';
