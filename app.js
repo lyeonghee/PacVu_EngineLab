@@ -10,6 +10,10 @@
 const state = {
   showSlots:  true,
   showHoles:  true,
+  showPerforation: true,
+  showRuler:  true,
+  showCut:    true,
+  showBleed:  true,
   showFolds:  true,
   showLabels: true,
   showDims:   true,
@@ -54,6 +58,7 @@ function getCfg() {
     td:  val('lockTabDepth', 12),
     th:  val('lockTabHeight', 18),
     SK:  val('insertSkew', 8),
+    stringHoleEnabled: document.getElementById('stringHoleEnabled')?.checked !== false,
     holeDia:     val('holeDia', 6),
     holeGap:     val('holeGap', 70),
     holeOffsetY: val('holeOffsetY', 45)
@@ -66,6 +71,32 @@ function getCfgT001() {
     W: val('baseW', 57),
     D: val('baseD', 57),
     H: val('panelH', 177)
+  };
+}
+
+function getCfgT002() {
+  return {
+    W: val('baseW', 126),
+    D: val('baseD', 81),
+    H: val('panelH', 308),
+    bottleTopHoleEnabled: document.getElementById('t002BottleTopHoleEnabled')?.checked !== false,
+    bottleTopHoleDia: val('t002BottleTopHoleDia', 56),
+    bottleTopHoleY: val('t002BottleTopHoleY', 42),
+    neckHoleEnabled: document.getElementById('t002NeckHoleEnabled')?.checked !== false,
+    neckHoleDia: val('t002NeckHoleDia', 20),
+    neckHoleY: val('t002NeckHoleY', 35)
+  };
+}
+
+function getCfgT003() {
+  return {
+    W: val('baseW', 86.5),
+    D: val('baseD', 86.5),
+    H: val('panelH', 296),
+    stringHoleEnabled: document.getElementById('stringHoleEnabled')?.checked !== false,
+    holeDia: val('holeDia', 6),
+    holeGap: val('holeGap', 70),
+    holeOffsetY: val('holeOffsetY', 45)
   };
 }
 
@@ -90,7 +121,10 @@ function getCfgM002() {
   return {
     W: val('baseW', 400),
     D: val('baseD', 308),
-    H: val('panelH', 80)
+    H: val('panelH', 80),
+    handleHoleEnabled: document.getElementById('m002HandleHoleEnabled')?.checked !== false,
+    handleHoleWidth: val('m002HandleHoleWidth', 25),
+    handleHoleHeight: val('m002HandleHoleHeight', 25)
   };
 }
 
@@ -99,6 +133,17 @@ function getCfgR003() {
     W: val('baseW', 350),
     D: val('baseD', 230),
     H: val('panelH', 220)
+  };
+}
+
+function getCfgR004() {
+  return {
+    W: val('baseW', 280),
+    D: val('baseD', 220),
+    H: val('panelH', 190),
+    handleHoleEnabled: document.getElementById('r004HandleHoleEnabled')?.checked !== false,
+    handleHoleWidth: val('r004HandleHoleWidth', 75),
+    handleHoleHeight: val('r004HandleHoleHeight', 25)
   };
 }
 
@@ -169,6 +214,14 @@ function render(forceFit = false) {
     const c = getCfgT001();
     svgStr = T001_renderSVG(c, state);
 
+  } else if (eng === 'bbox2') {
+    const c = getCfgT002();
+    svgStr = T002_renderSVG(c, state);
+
+  } else if (eng === 'bbox3') {
+    const c = getCfgT003();
+    svgStr = T003_renderSVG(c, state);
+
   } else if (eng === 'rbox') {
     // ── R001 A-Type RSC ──────────────────────────────────────
     const c = getCfgR001();
@@ -181,6 +234,10 @@ function render(forceFit = false) {
   } else if (eng === 'rbox3') {
     const c = getCfgR003();
     svgStr = R003_renderSVG(c, state);
+
+  } else if (eng === 'rbox4') {
+    const c = getCfgR004();
+    svgStr = R004_renderSVG(c, state);
 
   } else {
     // 준비 중
@@ -260,6 +317,14 @@ function fitToScreen() {
       const c = getCfgT001();
       const layout = T001_getLayout(c.W, c.D, c.H);
       bounds = layout.bounds;
+    } else if (eng === 'bbox2') {
+      const c = getCfgT002();
+      const layout = T002_getLayout(c.W, c.D, c.H);
+      bounds = layout.bounds;
+    } else if (eng === 'bbox3') {
+      const c = getCfgT003();
+      const layout = T003_getLayout(c.W, c.D, c.H);
+      bounds = layout.bounds;
     } else if (eng === 'rbox') {
       // ── R001 bounds ─────────────────────────────────────────
       const c = getCfgR001();
@@ -272,6 +337,10 @@ function fitToScreen() {
     } else if (eng === 'rbox3') {
       const c = getCfgR003();
       const layout = R003_getLayout(c.W, c.D, c.H);
+      bounds = layout.bounds;
+    } else if (eng === 'rbox4') {
+      const c = getCfgR004();
+      const layout = R004_getLayout(c.W, c.D, c.H);
       bounds = layout.bounds;
     } else {
       bounds = { minX:0, minY:0, width:400, height:200 };
@@ -337,6 +406,18 @@ function buildExportSVG(cfg, eng) {
       : '';
   }
 
+  if (eng === 'bbox2') {
+    return typeof T002_buildExportSVG === 'function'
+      ? T002_buildExportSVG(cfg)
+      : '';
+  }
+
+  if (eng === 'bbox3') {
+    return typeof T003_buildExportSVG === 'function'
+      ? T003_buildExportSVG(cfg)
+      : '';
+  }
+
   if (eng === 'rbox') {
     return typeof R001_buildExportSVG === 'function'
       ? R001_buildExportSVG(cfg)
@@ -355,6 +436,12 @@ function buildExportSVG(cfg, eng) {
       : '';
   }
 
+  if (eng === 'rbox4') {
+    return typeof R004_buildExportSVG === 'function'
+      ? R004_buildExportSVG(cfg)
+      : '';
+  }
+
   return '';
 }
 
@@ -362,9 +449,12 @@ function buildDXF(cfg, eng) {
   if (eng === 'gbox') return typeof buildDXF_M001 === 'function' ? buildDXF_M001(cfg) : '';
   if (eng === 'gbox2') return typeof M002_buildDXF === 'function' ? M002_buildDXF(cfg) : '';
   if (eng === 'bbox') return typeof T001_buildDXF === 'function' ? T001_buildDXF(cfg) : '';
+  if (eng === 'bbox2') return typeof T002_buildDXF === 'function' ? T002_buildDXF(cfg) : '';
+  if (eng === 'bbox3') return typeof T003_buildDXF === 'function' ? T003_buildDXF(cfg) : '';
   if (eng === 'rbox') return typeof R001_buildDXF === 'function' ? R001_buildDXF(cfg) : '';
   if (eng === 'rbox2') return typeof R002_buildDXF === 'function' ? R002_buildDXF(cfg) : '';
   if (eng === 'rbox3') return typeof R003_buildDXF === 'function' ? R003_buildDXF(cfg) : '';
+  if (eng === 'rbox4') return typeof R004_buildDXF === 'function' ? R004_buildDXF(cfg) : '';
   return '';
 }
 
@@ -392,6 +482,7 @@ function initBoxLibrarySelect() {
       empty.value = ''; empty.textContent = '준비 중';
       typeEl.appendChild(empty);
       selectedBoxMeta = { categoryKey: cat.categoryKey, engineKey: '', variantKey: '' };
+      updatePerforationSettings();
       return;
     }
     cat.items.forEach(item => {
@@ -441,12 +532,214 @@ function _applySelectedBox(item, opt) {
     if (dD) dD.value = item.defaultDims.D;
     if (dH) dH.value = item.defaultDims.H;
   }
+  updatePerforationSettings();
+}
+
+function legacySetupPanelUi() {
+  const optionGrid = document.querySelector('.option-grid');
+  const displayBody = optionGrid?.closest('.group-body');
+  if (optionGrid && displayBody) {
+    optionGrid.innerHTML = [
+      '<label><span>눈금자</span><input id="showRuler" type="checkbox" checked></label>',
+      '<label><span>치수선</span><input id="showDims" type="checkbox" checked></label>',
+      '<label><span>패널명</span><input id="showLabels" type="checkbox" checked></label>',
+      '<label><span>재단선</span><input id="showCut" type="checkbox" checked></label>',
+      '<label><span>접힘선</span><input id="showFolds" type="checkbox" checked></label>',
+      '<label><span>블리드</span><input id="showBleed" type="checkbox" checked></label>',
+      '<label><span>타공 표시</span><input id="showPerforation" type="checkbox" checked></label>'
+    ].join('');
+
+    Array.from(displayBody.children).forEach(child => {
+      if (child !== optionGrid) child.remove();
+    });
+  }
+
+  const sidebarInner = document.querySelector('.sidebar-inner');
+  const hint = document.querySelector('.hint');
+  if (!sidebarInner || document.getElementById('perforationSettings')) {
+    updateLegendUi();
+    return;
+  }
+
+  const section = document.createElement('details');
+  section.id = 'perforationSettings';
+  section.className = 'group';
+  section.open = true;
+  section.hidden = true;
+  section.innerHTML = [
+    '<summary>타공 설정</summary>',
+    '<div class="group-body">',
+    '<details class="sub-group perforation-item" data-engines="gbox bbox3" open>',
+    '<summary>끈구멍</summary>',
+    '<div class="row"><label>사용</label><input id="stringHoleEnabled" type="checkbox" data-render-input checked></div>',
+    '<div class="row"><label>지름</label><input id="holeDia" type="number" step="0.5" value="6"></div>',
+    '<div class="row"><label>간격</label><input id="holeGap" type="number" step="1" value="70"></div>',
+    '<div class="row"><label>Y 위치</label><input id="holeOffsetY" type="number" step="0.5" value="45"></div>',
+    '</details>',
+    '<details class="sub-group perforation-item" data-engines="gbox2" open>',
+    '<summary>손잡이 홀</summary>',
+    '<div class="row"><label>사용</label><input id="m002HandleHoleEnabled" type="checkbox" data-render-input checked></div>',
+    '<div class="row"><label>가로</label><input id="m002HandleHoleWidth" type="number" step="0.5" value="25"></div>',
+    '<div class="row"><label>세로</label><input id="m002HandleHoleHeight" type="number" step="0.5" value="25"></div>',
+    '<div class="row"><label>패널</label><input type="text" value="Back Insert" readonly></div>',
+    '</details>',
+    '<details class="sub-group perforation-item" data-engines="rbox4" open>',
+    '<summary>손잡이 홀</summary>',
+    '<div class="row"><label>사용</label><input id="r004HandleHoleEnabled" type="checkbox" data-render-input checked></div>',
+    '<div class="row"><label>가로</label><input id="r004HandleHoleWidth" type="number" step="0.5" value="75"></div>',
+    '<div class="row"><label>세로</label><input id="r004HandleHoleHeight" type="number" step="0.5" value="25"></div>',
+    '<div class="row"><label>패널</label><input type="text" value="Side" readonly></div>',
+    '</details>',
+    '<details class="sub-group perforation-item" data-engines="bbox2" open>',
+    '<summary>병상단 홀 / Bottle Top Hole</summary>',
+    '<div class="row"><label>사용</label><input id="t002BottleTopHoleEnabled" type="checkbox" data-render-input checked></div>',
+    '<div class="row"><label>지름</label><input id="t002BottleTopHoleDia" type="number" step="0.5" value="56"></div>',
+    '<div class="row"><label>기준 패널</label><input type="text" value="Bottle Top" readonly></div>',
+    '<div class="row"><label>X 위치</label><input type="text" value="중앙" readonly></div>',
+    '<div class="row"><label>Y 위치</label><input id="t002BottleTopHoleY" type="number" step="0.5" value="42"></div>',
+    '</details>',
+    '<details class="sub-group perforation-item" data-engines="bbox2" open>',
+    '<summary>병목 홀 / Neck Hole</summary>',
+    '<div class="row"><label>사용</label><input id="t002NeckHoleEnabled" type="checkbox" data-render-input checked></div>',
+    '<div class="row"><label>지름</label><input id="t002NeckHoleDia" type="number" step="0.5" value="20"></div>',
+    '<div class="row"><label>기준 패널</label><input type="text" value="Back" readonly></div>',
+    '<div class="row"><label>X 위치</label><input type="text" value="중앙" readonly></div>',
+    '<div class="row"><label>Y 위치</label><input id="t002NeckHoleY" type="number" step="0.5" value="35"></div>',
+    '</details>',
+    '</div>'
+  ].join('');
+
+  sidebarInner.insertBefore(section, hint || null);
+  updateLegendUi();
+}
+
+function legacyUpdateLegendUi() {
+  const legend = document.querySelector('.legend');
+  if (!legend) return;
+  legend.innerHTML = [
+    '<div><span class="ln fold-ln"></span>접힘선</div>',
+    '<div><span class="ln cut-ln"></span>재단선</div>',
+    '<div><span class="ln perf-ln"></span>타공선</div>',
+    '<div><span class="ln bleed-ln"></span>블리드</div>'
+  ].join('');
+}
+
+function updatePerforationSettings() {
+  const section = document.getElementById('perforationSettings');
+  if (!section) return;
+  const eng = selectedBoxMeta.engineKey || '';
+  let hasVisible = false;
+
+  section.querySelectorAll('.perforation-item').forEach(item => {
+    const engines = (item.dataset.engines || '').split(/\s+/).filter(Boolean);
+    const visible = engines.includes(eng);
+    item.hidden = !visible;
+    if (visible) hasVisible = true;
+  });
+
+  section.hidden = !hasVisible;
+}
+
+function setupPanelUi() {
+  const optionGrid = document.querySelector('.option-grid');
+  const displayBody = optionGrid?.closest('.group-body');
+  if (optionGrid && displayBody) {
+    optionGrid.innerHTML = [
+      '<label><span>\ub208\uae08\uc790</span><input id="showRuler" type="checkbox" checked></label>',
+      '<label><span>\uce58\uc218\uc120</span><input id="showDims" type="checkbox" checked></label>',
+      '<label><span>\ud328\ub110\uba85</span><input id="showLabels" type="checkbox" checked></label>',
+      '<label><span>\uc7ac\ub2e8\uc120</span><input id="showCut" type="checkbox" checked></label>',
+      '<label><span>\uc811\ud798\uc120</span><input id="showFolds" type="checkbox" checked></label>',
+      '<label><span>\ube14\ub9ac\ub4dc</span><input id="showBleed" type="checkbox" checked></label>',
+      '<label><span>\ud0c0\uacf5 \ud45c\uc2dc</span><input id="showPerforation" type="checkbox" checked></label>'
+    ].join('');
+
+    Array.from(displayBody.children).forEach(child => {
+      if (child !== optionGrid) child.remove();
+    });
+  }
+
+  const sidebarInner = document.querySelector('.sidebar-inner');
+  const hint = document.querySelector('.hint');
+  let section = document.getElementById('perforationSettings');
+  if (!sidebarInner) {
+    updateLegendUi();
+    return;
+  }
+
+  if (section) {
+    section.remove();
+  }
+
+  section = document.createElement('details');
+  section.id = 'perforationSettings';
+  section.className = 'group';
+  section.open = true;
+  section.hidden = true;
+  section.innerHTML = [
+    '<summary>\ud0c0\uacf5 \uc124\uc815</summary>',
+    '<div class="group-body">',
+    '<details class="sub-group perforation-item" data-engines="gbox bbox3" open>',
+    '<summary>\ub048\uad6c\uba4d</summary>',
+    '<div class="row"><label>\uc0ac\uc6a9</label><input id="stringHoleEnabled" type="checkbox" data-render-input checked></div>',
+    '<div class="row"><label>\uc9c0\ub984</label><input id="holeDia" type="number" step="0.5" value="6"></div>',
+    '<div class="row"><label>\uac04\uaca9</label><input id="holeGap" type="number" step="1" value="70"></div>',
+    '<div class="row"><label>Y \uc704\uce58</label><input id="holeOffsetY" type="number" step="0.5" value="45"></div>',
+    '</details>',
+    '<details class="sub-group perforation-item" data-engines="gbox2" open>',
+    '<summary>\uc190\uc7a1\uc774 \ud640</summary>',
+    '<div class="row"><label>\uc0ac\uc6a9</label><input id="m002HandleHoleEnabled" type="checkbox" data-render-input checked></div>',
+    '<div class="row"><label>\uac00\ub85c</label><input id="m002HandleHoleWidth" type="number" step="0.5" value="25"></div>',
+    '<div class="row"><label>\uc138\ub85c</label><input id="m002HandleHoleHeight" type="number" step="0.5" value="25"></div>',
+    '<div class="row"><label>\ud328\ub110</label><input type="text" value="Back Insert" readonly></div>',
+    '</details>',
+    '<details class="sub-group perforation-item" data-engines="rbox4" open>',
+    '<summary>\uc190\uc7a1\uc774 \ud640</summary>',
+    '<div class="row"><label>\uc0ac\uc6a9</label><input id="r004HandleHoleEnabled" type="checkbox" data-render-input checked></div>',
+    '<div class="row"><label>\uac00\ub85c</label><input id="r004HandleHoleWidth" type="number" step="0.5" value="75"></div>',
+    '<div class="row"><label>\uc138\ub85c</label><input id="r004HandleHoleHeight" type="number" step="0.5" value="25"></div>',
+    '<div class="row"><label>\ud328\ub110</label><input type="text" value="Side" readonly></div>',
+    '</details>',
+    '<details class="sub-group perforation-item" data-engines="bbox2" open>',
+    '<summary>\ubcd1\uc0c1\ub2e8 \ud640 / Bottle Top Hole</summary>',
+    '<div class="row"><label>\uc0ac\uc6a9</label><input id="t002BottleTopHoleEnabled" type="checkbox" data-render-input checked></div>',
+    '<div class="row"><label>\uc9c0\ub984</label><input id="t002BottleTopHoleDia" type="number" step="0.5" value="56"></div>',
+    '<div class="row"><label>\uae30\uc900 \ud328\ub110</label><input type="text" value="Bottle Top" readonly></div>',
+    '<div class="row"><label>X \uc704\uce58</label><input type="text" value="\uc911\uc559" readonly></div>',
+    '<div class="row"><label>Y \uc704\uce58</label><input id="t002BottleTopHoleY" type="number" step="0.5" value="42"></div>',
+    '</details>',
+    '<details class="sub-group perforation-item" data-engines="bbox2" open>',
+    '<summary>\ubcd1\ubaa9 \ud640 / Neck Hole</summary>',
+    '<div class="row"><label>\uc0ac\uc6a9</label><input id="t002NeckHoleEnabled" type="checkbox" data-render-input checked></div>',
+    '<div class="row"><label>\uc9c0\ub984</label><input id="t002NeckHoleDia" type="number" step="0.5" value="20"></div>',
+    '<div class="row"><label>\uae30\uc900 \ud328\ub110</label><input type="text" value="Back" readonly></div>',
+    '<div class="row"><label>X \uc704\uce58</label><input type="text" value="\uc911\uc559" readonly></div>',
+    '<div class="row"><label>Y \uc704\uce58</label><input id="t002NeckHoleY" type="number" step="0.5" value="35"></div>',
+    '</details>',
+    '</div>'
+  ].join('');
+
+  sidebarInner.insertBefore(section, hint || null);
+  updateLegendUi();
+}
+
+function updateLegendUi() {
+  const legend = document.querySelector('.legend');
+  if (!legend) return;
+  legend.innerHTML = [
+    '<div><span class="ln fold-ln"></span>\uc811\ud798\uc120</div>',
+    '<div><span class="ln cut-ln"></span>\uc7ac\ub2e8\uc120</div>',
+    '<div><span class="ln perf-ln"></span>\ud0c0\uacf5\uc120</div>',
+    '<div><span class="ln bleed-ln"></span>\ube14\ub9ac\ub4dc</div>'
+  ].join('');
 }
 
 // ============================================================
 // UI BINDINGS
 // ============================================================
 function bindAll() {
+  setupPanelUi();
+
   fetch('./data/boxLibrary.json')
     .then(r => r.json())
     .then(data => {
@@ -463,11 +756,22 @@ function bindAll() {
   document.querySelectorAll('input[type=number]').forEach(
     el => el.addEventListener('change', scheduleRender)
   );
+  document.querySelectorAll('input[type=checkbox][data-render-input]').forEach(
+    el => el.addEventListener('change', scheduleRender)
+  );
 
   const get = id => document.getElementById(id);
 
+  get('showRuler')?.addEventListener('change', e => { state.showRuler = e.target.checked; render(true); });
   get('showDims')?.addEventListener('change',   e => { state.showDims   = e.target.checked; render(true); });
-  get('showHoles')?.addEventListener('change',  e => { state.showHoles  = e.target.checked; render(true); });
+  get('showCut')?.addEventListener('change',    e => { state.showCut    = e.target.checked; render(true); });
+  get('showBleed')?.addEventListener('change',  e => { state.showBleed  = e.target.checked; render(true); });
+  get('showPerforation')?.addEventListener('change', e => {
+    state.showPerforation = e.target.checked;
+    state.showHoles = e.target.checked;
+    state.showSlots = e.target.checked;
+    render(true);
+  });
   get('showFolds')?.addEventListener('change',  e => { state.showFolds  = e.target.checked; render(true); });
   get('showLabels')?.addEventListener('change', e => { state.showLabels = e.target.checked; render(true); });
 
@@ -480,9 +784,12 @@ function bindAll() {
     const cfg = eng === 'gbox' ? getCfg()
       : eng === 'gbox2' ? getCfgM002()
       : eng === 'bbox' ? getCfgT001()
+      : eng === 'bbox2' ? getCfgT002()
+      : eng === 'bbox3' ? getCfgT003()
       : eng === 'rbox' ? getCfgR001()
       : eng === 'rbox2' ? getCfgR002()
       : eng === 'rbox3' ? getCfgR003()
+      : eng === 'rbox4' ? getCfgR004()
       : getCfg();
 
     const dim  = `${cfg.W}x${cfg.D}x${cfg.H}`;
@@ -502,9 +809,12 @@ function bindAll() {
     const cfg = eng === 'gbox' ? getCfg()
       : eng === 'gbox2' ? getCfgM002()
       : eng === 'bbox' ? getCfgT001()
+      : eng === 'bbox2' ? getCfgT002()
+      : eng === 'bbox3' ? getCfgT003()
       : eng === 'rbox' ? getCfgR001()
       : eng === 'rbox2' ? getCfgR002()
       : eng === 'rbox3' ? getCfgR003()
+      : eng === 'rbox4' ? getCfgR004()
       : getCfg();
 
     const dim  = `${cfg.W}x${cfg.D}x${cfg.H}`;

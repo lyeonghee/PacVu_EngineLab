@@ -58,6 +58,22 @@
             <div class="row"><label>Hole Ø</label><input id="holeDia"     type="number" step="0.5" value="6"></div>
             <div class="row"><label>Hole Gap</label><input id="holeGap"   type="number" step="1"   value="70"></div>
             <div class="row"><label>Offset Y</label><input id="holeOffsetY" type="number" step="0.5" value="45"></div>
+            <details class="sub-group" open>
+              <summary>Bottle Top Hole</summary>
+              <div class="row"><label>Use</label><input id="t002BottleTopHoleEnabled" type="checkbox" data-render-input checked></div>
+              <div class="row"><label>Diameter</label><input id="t002BottleTopHoleDia" type="number" step="0.5" value="56"></div>
+              <div class="row"><label>Panel</label><input type="text" value="Bottle Top" readonly></div>
+              <div class="row"><label>X</label><input type="text" value="Center" readonly></div>
+              <div class="row"><label>Y</label><input id="t002BottleTopHoleY" type="number" step="0.5" value="42"></div>
+            </details>
+            <details class="sub-group" open>
+              <summary>Back Small Hole</summary>
+              <div class="row"><label>Use</label><input id="t002BackSmallHoleEnabled" type="checkbox" data-render-input checked></div>
+              <div class="row"><label>Diameter</label><input id="t002BackSmallHoleDia" type="number" step="0.5" value="20"></div>
+              <div class="row"><label>Panel</label><input type="text" value="Back" readonly></div>
+              <div class="row"><label>X</label><input type="text" value="Center" readonly></div>
+              <div class="row"><label>Y</label><input id="t002BackSmallHoleY" type="number" step="0.5" value="35"></div>
+            </details>
           </div>
         </details>
 
@@ -96,10 +112,18 @@
   <script src="./structures/mailer/M002/M002_layout.js"></script>
   <script src="./structures/mailer/M002/M002_renderer.js"></script>
 
-  <!-- T001: B-Type Tuck -->
-  <script src="./structures/tuck/T001/T001_spec.js"></script>
+  <!-- T001: B-Type Tuck current working template -->
   <script src="./structures/tuck/T001/T001_layout.js"></script>
-  <script src="./structures/tuck/T001/T001_renderer.js"></script>
+
+  <!-- T002: B-Type Bottle Box -->
+  <script src="./structures/tuck/T002/T002_spec.js"></script>
+  <script src="./structures/tuck/T002/T002_layout.js"></script>
+  <script src="./structures/tuck/T002/T002_renderer.js"></script>
+
+  <!-- T003: B-Type Bottle Box / left -->
+  <script src="./structures/tuck/T003/T003_spec.js"></script>
+  <script src="./structures/tuck/T003/T003_layout.js"></script>
+  <script src="./structures/tuck/T003/T003_renderer.js"></script>
 
   <!-- R001: A-Type RSC Shipping -->
   <script src="./structures/shipping/rsc/R001/R001_spec.js"></script>
@@ -115,6 +139,11 @@
   <script src="./structures/shipping/rsc/R003/R003_spec.js"></script>
   <script src="./structures/shipping/rsc/R003/R003_layout.js"></script>
   <script src="./structures/shipping/rsc/R003/R003_renderer.js"></script>
+
+  <!-- R004: A-Type RSC Shipping 4 with handle cut -->
+  <script src="./structures/shipping/rsc/R004/R004_spec.js"></script>
+  <script src="./structures/shipping/rsc/R004/R004_layout.js"></script>
+  <script src="./structures/shipping/rsc/R004/R004_renderer.js"></script>
 
   <!-- export -->
   <script src="./export/svgExport.js"></script>
