@@ -258,6 +258,7 @@ function buildSlots(cfg, g) {
 
 // ── Holes ─────────────────────────────────────────────────────
 function buildHoles(cfg, g) {
+  if (cfg.stringHoleEnabled === false) return [];
   const { holeDia, holeGap, holeOffsetY } = cfg;
   const { xCL, xCR, y2 } = g;
   const r = holeDia / 2, cx = (xCL + xCR) / 2, cy = y2 + holeOffsetY;
@@ -617,7 +618,8 @@ const vbW = bounds.width + pad2 * 2, vbH = bounds.height + pad2 * 2;
   <path d="M0,0 L10,5 L0,10 Z" fill="#111"/>
 </marker>
 <style>
-      .thomson{fill:#ffffff;stroke:#cc0000;stroke-width:0.45;stroke-linejoin:round;stroke-linecap:round;}
+      .panel{fill:#ffffff;stroke:none;}
+      .thomson{fill:none;stroke:#cc0000;stroke-width:0.45;stroke-linejoin:round;stroke-linecap:round;}
       .fold{fill:none;stroke:#1d6fe8;stroke-width:0.35;stroke-dasharray:2 1.6;}
       .slot{fill:none;stroke:#e53935;stroke-width:0.45;}
       .hole{fill:none;stroke:#1f8f4f;stroke-width:0.45;}
@@ -631,11 +633,18 @@ const vbW = bounds.width + pad2 * 2, vbH = bounds.height + pad2 * 2;
     <rect x="${vbX}" y="${vbY}" width="${vbW}" height="${vbH}" fill="#d0d0d0" stroke="none"/>
     <g id="viewportGroup">
 
-     <g id="layer-bleed"><path class="bleed" d="${bleedPath}"/></g>
-    <g id="layer-cut"><path class="thomson" d="${outerPath}"/></g>
+    <g id="layer-panel-fill"><path class="panel" d="${outerPath}"/></g>`;
+
+  if (state.showBleed) {
+    svg += `<g id="layer-bleed"><path class="bleed" d="${bleedPath}"/></g>`;
+  }
+
+  if (state.showCut) {
+    svg += `<g id="layer-cut"><path class="thomson" d="${outerPath}"/></g>`;
+  }
    
     
-    <g id="layer-fold">`;
+  svg += `<g id="layer-fold">`;
 
   if (state.showFolds) {
   foldLines.forEach(l => {
@@ -645,8 +654,8 @@ const vbW = bounds.width + pad2 * 2, vbH = bounds.height + pad2 * 2;
 
 svg += `</g>`;
 
-  if (state.showSlots) slots.forEach(s => svg += `<path class="slot" d="${roundRectPath(s.x, s.y, s.w, s.h, 2.5)}"/>`);
-  if (state.showHoles) holes.forEach(h => svg += `<path class="hole" d="${circlePath(h.cx, h.cy, h.r)}"/>`);
+  if (state.showPerforation) slots.forEach(s => svg += `<path class="slot" d="${roundRectPath(s.x, s.y, s.w, s.h, 2.5)}"/>`);
+  if (state.showPerforation) holes.forEach(h => svg += `<path class="hole" d="${circlePath(h.cx, h.cy, h.r)}"/>`);
   if (state.showLabels) {
     const { xCL, xCR, xSL, y0, y1, y2, y3, y4 } = g;
     const { H, LH, D, BIH, FIH, BLW } = cfg;
@@ -707,6 +716,54 @@ svg += watermark;
 
 svg += '</svg>';
 return svg;
+}
+
+function M001_buildExportSVG(cfg) {
+  const g = M001_getGrid(cfg);
+  const outerPath = buildOuterPath(cfg, g);
+  const foldLines = buildFoldLines(cfg, g);
+  const slots = buildSlots(cfg, g);
+  const holes = buildHoles(cfg, g);
+  const bleedPath = buildBleedPath(cfg, g, 4);
+  const bounds = getBounds(outerPath, foldLines, slots, holes);
+  const pad = 5;
+  const vbX = bounds.minX - pad;
+  const vbY = bounds.minY - pad;
+  const vbW = bounds.width + pad * 2;
+  const vbH = bounds.height + pad * 2;
+
+  let out = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  out += `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vbX} ${vbY} ${vbW} ${vbH}" width="${vbW}mm" height="${vbH}mm">\n`;
+  out += '<defs><style>';
+  out += '.panel{fill:#ffffff;stroke:none;}';
+  out += '.thomson{fill:none;stroke:#cc0000;stroke-width:0.45;stroke-linejoin:round;stroke-linecap:round;}';
+  out += '.fold{fill:none;stroke:#1d6fe8;stroke-width:0.35;stroke-dasharray:2 1.6;}';
+  out += '.slot{fill:none;stroke:#e53935;stroke-width:0.45;}';
+  out += '.hole{fill:none;stroke:#1f8f4f;stroke-width:0.45;}';
+  out += '.bleed{fill:none;stroke:#0055ff;stroke-width:0.45;stroke-linejoin:round;stroke-linecap:round;}';
+  out += '</style></defs>\n';
+  out += `<g id="layer-panel-fill"><path class="panel" d="${outerPath}"/></g>\n`;
+  out += `<g id="layer-bleed"><path class="bleed" d="${bleedPath}"/></g>\n`;
+  out += `<g id="layer-cut"><path class="thomson" d="${outerPath}"/></g>\n`;
+  out += '<g id="layer-fold">\n';
+  foldLines.forEach(l => {
+    out += `<line class="fold" x1="${l.x1}" y1="${l.y1}" x2="${l.x2}" y2="${l.y2}"/>\n`;
+  });
+  out += '</g>\n';
+  out += '<g id="layer-perforation">\n';
+  slots.forEach(s => {
+    out += `<path class="slot" d="${roundRectPath(s.x, s.y, s.w, s.h, 2.5)}"/>\n`;
+  });
+  holes.forEach(h => {
+    out += `<path class="hole" d="${circlePath(h.cx, h.cy, h.r)}"/>\n`;
+  });
+  out += '</g>\n';
+  out += '</svg>';
+  return out;
+}
+
+if (typeof window !== 'undefined') {
+  window.M001_buildExportSVG = M001_buildExportSVG;
 }
 // ── public aliases ───────────────────────────────────────────
 // app.js는 M001_renderSVG(cfg, state) 를 호출
