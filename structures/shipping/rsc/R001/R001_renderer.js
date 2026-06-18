@@ -122,19 +122,27 @@ function R001_buildExportSVG(cfg) {
   out += '<svg xmlns="http://www.w3.org/2000/svg"' +
     ' viewBox="' + N(vbX) + ' ' + N(vbY) + ' ' + N(vbW) + ' ' + N(vbH) + '"' +
     ' width="' + N(vbW) + 'mm" height="' + N(vbH) + 'mm">\n';
+  out += '  <g id="layer-panel-fill">\n';
+  out += '    <path style="fill:#ffffff;stroke:none;" d="' + outerPath + '"/>\n';
+  out += '  </g>\n';
+  out += '  <g id="layer-glue">\n';
+  out += '    <path style="fill:#d9d9d9;stroke:none;" d="' + gluePathD + '"/>\n';
+  out += '  </g>\n';
   if (bleedPathD) {
-    out += '  <!-- Bleed: outerPath + stroke-width 6mm (fill:none) -->\n';
     out += '  <g id="layer-bleed">\n';
-    out += '    <path style="fill:none;stroke:#0055ff;stroke-width:0.45;stroke-linejoin:round;stroke-linecap:round;" d="' + bleedPathD + '"/>\n';
+    out += '    <path style="fill:none;stroke:#0055ff;stroke-width:0.45;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;" d="' + bleedPathD + '"/>\n';
     out += '  </g>\n';
   }
-  out += '  <path style="fill:#d9d9d9;stroke:none;" d="' + gluePathD + '"/>\n';
-  out += '  <path style="fill:#ffffff;stroke:#cc0000;stroke-width:0.45;stroke-linejoin:round;stroke-linecap:round;" d="' + outerPath + '"/>\n';
+  out += '  <g id="layer-cut">\n';
+  out += '    <path style="fill:none;stroke:#cc0000;stroke-width:0.45;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;" d="' + outerPath + '"/>\n';
+  out += '  </g>\n';
+  out += '  <g id="layer-fold">\n';
   foldLines.forEach(function(f) {
-    out += '  <line style="fill:none;stroke:#1d6fe8;stroke-width:0.35;stroke-dasharray:2 1.6;"' +
+    out += '    <line style="fill:none;stroke:#1d6fe8;stroke-width:0.35;stroke-dasharray:2 1.6;"' +
       ' x1="' + N(f.x1) + '" y1="' + N(f.y1) + '"' +
       ' x2="' + N(f.x2) + '" y2="' + N(f.y2) + '"/>\n';
   });
+  out += '  </g>\n';
   out += '</svg>';
   return out;
 }

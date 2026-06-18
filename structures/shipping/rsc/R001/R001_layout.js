@@ -218,6 +218,20 @@ function R001_buildBleedPath(W, D, H, d) {
 
   function N(v) { return (+v).toFixed(4); }
   function _p(x, y) { return N(x)+','+N(y); }
+  function offPts(x1,y1,x2,y2){
+    var dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy);
+    var nx=-dy/len,ny=dx/len;
+    return {p1:[x1+nx*d,y1+ny*d],p2:[x2+nx*d,y2+ny*d]};
+  }
+  function isect(a,b){
+    var d1=[a.p2[0]-a.p1[0],a.p2[1]-a.p1[1]];
+    var d2=[b.p2[0]-b.p1[0],b.p2[1]-b.p1[1]];
+    var dx=b.p1[0]-a.p1[0],dy=b.p1[1]-a.p1[1];
+    var cr=d1[0]*d2[1]-d1[1]*d2[0];
+    if(Math.abs(cr)<1e-10)return a.p2;
+    var t=(dx*d2[1]-dy*d2[0])/cr;
+    return [a.p1[0]+t*d1[0], a.p1[1]+t*d1[1]];
+  }
 
   var bp = [];
 
@@ -226,7 +240,24 @@ function R001_buildBleedPath(W, D, H, d) {
   bp.push('L '+_p(xFrontL-d,         yTop-d));        // 좌상
 
   // ── Glue 구간: 단순 수직선 ───────────────────────────────
-  bp.push('L '+_p(xFrontL-d,   yBot+d));           // front 좌측 전체 (직선)
+  (function(){
+    var leftTop = offPts(xFrontL, yTop, xFrontL, yFoldTop_arc);
+    var glueTop = offPts(xFrontL, yFoldTop_arc, xGlueL, glueTopY);
+    var glueLeft = offPts(xGlueL, glueTopY, xGlueL, glueBotY);
+    var glueBot = offPts(xGlueL, glueBotY, xFrontL, yFoldBot_arc);
+    var leftBot = offPts(xFrontL, yFoldBot_arc, xFrontL, yBot);
+    var bottom = offPts(xFrontL, yBot, xFrontR, yBot);
+    var iTop = isect(leftTop, glueTop);
+    var iGlueTop = isect(glueTop, glueLeft);
+    var iGlueBot = isect(glueLeft, glueBot);
+    var iBot = isect(glueBot, leftBot);
+    var iFrontBot = isect(leftBot, bottom);
+    bp.push('L '+_p(iTop[0], iTop[1]));
+    bp.push('L '+_p(iGlueTop[0], iGlueTop[1]));
+    bp.push('L '+_p(iGlueBot[0], iGlueBot[1]));
+    bp.push('L '+_p(iBot[0], iBot[1]));
+    bp.push('L '+_p(iFrontBot[0], iFrontBot[1]));
+  })();
   bp.push('L '+_p(xFrontR,           yBot+d));        // front 하단
 
   // ── sideL 하단 (아래로 d) ─────────────────────────────────
