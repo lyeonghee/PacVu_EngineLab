@@ -1,17 +1,7 @@
 [
   {
-    "categoryKey": "bakery_hinged",
-    "categoryLabel": "01 Bakery hinged box",
-    "items": []
-  },
-  {
-    "categoryKey": "gable",
-    "categoryLabel": "02 Gable box",
-    "items": []
-  },
-  {
     "categoryKey": "tuck",
-    "categoryLabel": "03 Tuck box",
+    "categoryLabel": "01 Tuck Box",
     "items": [
       {
         "label": "T001 B-Type Standard/기본박스",
@@ -48,12 +38,24 @@
           "D": 86.5,
           "H": 296
         }
+      },
+      {
+        "label": "T004 B-Type Tuck",
+        "koreanName": "B-Type Tuck Box",
+        "fefcoCode": "T004",
+        "engineKey": "bbox4",
+        "variantKey": "T004",
+        "defaultDims": {
+          "W": 130,
+          "D": 65,
+          "H": 190
+        }
       }
     ]
   },
   {
     "categoryKey": "mailer",
-    "categoryLabel": "04 Mailer box",
+    "categoryLabel": "02 Mailer Box",
     "items": [
       {
         "label": "G-Style mailer Standard Box 1",
@@ -66,7 +68,6 @@
           "D": 229,
           "H": 91
         }
-
       },
       {
         "label": "G-style Mailer Box 2",
@@ -83,46 +84,8 @@
     ]
   },
   {
-    "categoryKey": "handle",
-    "categoryLabel": "05 Handle box",
-    "items": []
-  },
-  {
-    "categoryKey": "rrp_display",
-    "categoryLabel": "06 RRP display box",
-    "items": [
-      {
-        "label": "RRP 기본형 / 진열형 박스",
-        "koreanName": "RRP 타입",
-        "fefcoCode": "확인 필요",
-        "engineKey": "rrpbox",
-        "variantKey": "default",
-        "defaultDims": {
-          "W": 235,
-          "D": 229,
-          "H": 91
-        }
-      }
-    ]
-  },
-  {
-    "categoryKey": "sleeve",
-    "categoryLabel": "07 Sleeve box",
-    "items": []
-  },
-  {
-    "categoryKey": "drawer",
-    "categoryLabel": "08 Drawer box",
-    "items": []
-  },
-  {
-    "categoryKey": "cake",
-    "categoryLabel": "09 Cake box",
-    "items": []
-  },
-  {
     "categoryKey": "shipping",
-    "categoryLabel": "10 Shipping box",
+    "categoryLabel": "03 Shipping Box",
     "items": [
       {
         "label": "A-Type / RSC Shipping Box 1",
@@ -170,6 +133,110 @@
           "W": 280,
           "D": 220,
           "H": 190
+        }
+      }
+    ]
+  },
+  {
+    "categoryKey": "gable",
+    "categoryLabel": "04 Gable Box",
+    "items": []
+  },
+  {
+    "categoryKey": "handle",
+    "categoryLabel": "05 Handle Box",
+    "items": []
+  },
+  {
+    "categoryKey": "rrp_display",
+    "categoryLabel": "06 RRP Display Box",
+    "items": [
+      {
+        "label": "RRP 기본형 / 진열형 박스",
+        "koreanName": "RRP 타입",
+        "fefcoCode": "확인 필요",
+        "engineKey": "rrpbox",
+        "variantKey": "default",
+        "defaultDims": {
+          "W": 235,
+          "D": 229,
+          "H": 91
+        }
+      }
+    ]
+  },
+  {
+    "categoryKey": "sleeve",
+    "categoryLabel": "07 Sleeve Box",
+    "items": []
+  },
+  {
+    "categoryKey": "sleeve_slide",
+    "categoryLabel": "08 Sleeve & Slide",
+    "items": [
+      {
+        "label": "S001 Slide Box Set / 3Hole Insert",
+        "koreanName": "S001 슬라이드 세트박스 / 3구 인서트형",
+        "fefcoCode": "S001",
+        "engineKey": "sSeries",
+        "variantKey": "S001",
+        "type": "set",
+        "defaultDims": {
+          "W": 298,
+          "D": 61,
+          "H": 292
+        },
+        "defaultProductSize": {
+          "W": 298,
+          "D": 61,
+          "H": 292
+        }
+      }
+    ]
+  },
+  {
+    "categoryKey": "drawer",
+    "categoryLabel": "09 Drawer Box",
+    "items": []
+  },
+  {
+    "categoryKey": "bakery",
+    "categoryLabel": "10 Bakery Box",
+    "items": [
+      {
+        "label": "B001 Bakery Box",
+        "koreanName": "B001 베이커리 박스",
+        "fefcoCode": "B001",
+        "engineKey": "b001",
+        "variantKey": "B001",
+        "defaultDims": {
+          "W": 160,
+          "D": 110,
+          "H": 80
+        }
+      }
+    ]
+  },
+  {
+    "categoryKey": "tray",
+    "categoryLabel": "11 Tray Box",
+    "items": []
+  },
+  {
+    "categoryKey": "cake",
+    "categoryLabel": "12 Cake Box",
+    "items": [
+      {
+        "label": "C001 Cake Box",
+        "koreanName": "C001 케이크 박스",
+        "fefcoCode": "C001",
+        "engineKey": "c001",
+        "variantKey": "C001",
+        "defaultPreset": "no3",
+        "defaultDims": {
+          "W": 277,
+          "D": 275,
+          "H": 140
         }
       }
     ]
