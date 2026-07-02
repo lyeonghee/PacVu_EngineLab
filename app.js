@@ -32,6 +32,22 @@ let selectedBoxMeta = {
 
 let BOX_LIBRARY = [];
 
+function isSSeriesSelection(box = selectedBoxMeta) {
+  return box.categoryKey === 'sleeve_slide' ||
+    box.engineKey === 'sSeries' ||
+    box.variantKey === 'S001' ||
+    box.type === 'set';
+}
+
+function getSelectedProductDefaults(box = selectedBoxMeta) {
+  const dims = box.defaultProductSize || box.defaultDims || {};
+  return {
+    W: dims.W ?? 298,
+    D: dims.D ?? 61,
+    H: dims.H ?? 292
+  };
+}
+
 // ============================================================
 // INPUT / CONFIG
 // ============================================================
@@ -155,6 +171,66 @@ function getCfgR004() {
   };
 }
 
+function s001PresetValue(id, fallback) {
+  const value = document.getElementById(id)?.value || 'Normal';
+  const table = {
+    Tight: fallback * 0.65,
+    Normal: fallback,
+    Loose: fallback * 1.6
+  };
+  return table[value] ?? fallback;
+}
+
+function getCfgS001() {
+  const defaults = getSelectedProductDefaults();
+  const base = typeof S001_getDefaultConfig === 'function' ? S001_getDefaultConfig() : {};
+  return {
+    W: val('baseW', defaults.W),
+    D: val('baseD', defaults.D),
+    H: val('panelH', defaults.H),
+    productW: val('baseW', defaults.W),
+    productD: val('baseD', defaults.D),
+    productH: val('panelH', defaults.H),
+    productGap: s001PresetValue('sProductPadPreset', base.productGap ?? 1.0),
+    padGap: s001PresetValue('sPadTrayPreset', base.padGap ?? 1.0),
+    trayGap: s001PresetValue('sTraySleevePreset', base.trayGap ?? 1.0),
+    slideGap: s001PresetValue('sTraySleevePreset', base.slideGap ?? 1.5),
+    paperThickness: base.paperThickness ?? 0.4,
+    insertPadEnabled: document.getElementById('sInsertPadEnabled')?.checked !== false,
+    showOuterSleeve: document.getElementById('sShowOuterSleeve')?.checked !== false,
+    showInnerTray: document.getElementById('sShowInnerTray')?.checked !== false,
+    showInsertPad: document.getElementById('sShowInsertPad')?.checked !== false,
+    viewMode: document.getElementById('sViewMode')?.value || 'All Parts',
+    outerStringHoleEnabled: document.getElementById('sOuterStringHoleEnabled')?.checked !== false,
+    outerMainHoleDia: val('sOuterMainHoleDia', base.outerMainHoleDia ?? 22),
+    outerSmallHoleDia: val('sOuterSmallHoleDia', base.outerSmallHoleDia ?? 6),
+    outerHoleOffsetY: val('sOuterHoleOffsetY', base.outerHoleOffsetY ?? 0),
+    holeCount: 3
+  };
+}
+
+function getCfgB001() {
+  return {
+    W: val('baseW', 160),
+    D: val('baseD', 110),
+    H: val('panelH', 80)
+  };
+}
+
+function getCfgC001() {
+  const preset = document.getElementById('c001Preset')?.value || selectedBoxMeta.defaultPreset || 'no3';
+  const heightOption = document.getElementById('c001HeightOption')?.value || 'Standard';
+  const customH = val('c001CustomH', 140);
+  const windowMode = document.getElementById('c001Window')?.value || 'None';
+  const handle = document.getElementById('c001Handle')?.value || 'Center Handle';
+  const cfg = typeof C001_resolveConfig === 'function'
+    ? C001_resolveConfig({ preset, heightOption, customH, windowMode, handle })
+    : { preset, W: 277, D: 275, H: 140, boardW: 265, boardD: 265, boardH: 5, heightOption, windowMode, handle };
+
+  syncC001SizeFields(cfg);
+  return cfg;
+}
+
 // ============================================================
 // DIMENSION VALIDATE (M001용)
 // ============================================================
@@ -250,6 +326,18 @@ function render(forceFit = false) {
   } else if (eng === 'rbox4') {
     const c = getCfgR004();
     svgStr = R004_renderSVG(c, state);
+
+  } else if (eng === 'sSeries' && selectedBoxMeta.variantKey === 'S001') {
+    const c = getCfgS001();
+    svgStr = S001_renderSVG(c, state);
+
+  } else if (eng === 'b001') {
+    const c = getCfgB001();
+    svgStr = B001_renderSVG(c, state);
+
+  } else if (eng === 'c001') {
+    const c = getCfgC001();
+    svgStr = C001_renderSVG(c, state);
 
   } else {
     // 준비 중
@@ -358,6 +446,18 @@ function fitToScreen() {
       const c = getCfgR004();
       const layout = R004_getLayout(c.W, c.D, c.H);
       bounds = layout.bounds;
+    } else if (eng === 'sSeries' && selectedBoxMeta.variantKey === 'S001') {
+      const c = getCfgS001();
+      const layout = S001_getLayout(c, state);
+      bounds = layout.bounds;
+    } else if (eng === 'b001') {
+      const c = getCfgB001();
+      const layout = B001_getLayout(c.W, c.D, c.H);
+      bounds = layout.bounds;
+    } else if (eng === 'c001') {
+      const c = getCfgC001();
+      const layout = C001_getLayout(c);
+      bounds = layout.bounds;
     } else {
       bounds = { minX:0, minY:0, width:400, height:200 };
     }
@@ -464,6 +564,24 @@ function buildExportSVG(cfg, eng) {
       : '';
   }
 
+  if (eng === 'sSeries' && selectedBoxMeta.variantKey === 'S001') {
+    return typeof S001_buildExportSVG === 'function'
+      ? S001_buildExportSVG(cfg)
+      : '';
+  }
+
+  if (eng === 'b001') {
+    return typeof B001_buildExportSVG === 'function'
+      ? B001_buildExportSVG(cfg)
+      : '';
+  }
+
+  if (eng === 'c001') {
+    return typeof C001_buildExportSVG === 'function'
+      ? C001_buildExportSVG(cfg)
+      : '';
+  }
+
   return '';
 }
 
@@ -478,7 +596,32 @@ function buildDXF(cfg, eng) {
   if (eng === 'rbox2') return typeof R002_buildDXF === 'function' ? R002_buildDXF(cfg) : '';
   if (eng === 'rbox3') return typeof R003_buildDXF === 'function' ? R003_buildDXF(cfg) : '';
   if (eng === 'rbox4') return typeof R004_buildDXF === 'function' ? R004_buildDXF(cfg) : '';
+  if (eng === 'sSeries' && selectedBoxMeta.variantKey === 'S001') return typeof S001_buildDXF === 'function' ? S001_buildDXF(cfg) : '';
+  if (eng === 'b001') return typeof B001_buildDXF === 'function' ? B001_buildDXF(cfg) : '';
+  if (eng === 'c001') return typeof C001_buildDXF === 'function' ? C001_buildDXF(cfg) : '';
   return '';
+}
+
+function buildPDF(cfg, eng) {
+  if (eng === 'b001') return typeof B001_buildPDF === 'function' ? B001_buildPDF(cfg) : '';
+  if (eng === 'c001') return typeof C001_buildPDF === 'function' ? C001_buildPDF(cfg) : '';
+  return '';
+}
+
+function downloadS001PartSVG(part, label) {
+  if (!isSSeriesSelection() || selectedBoxMeta.variantKey !== 'S001') return;
+  if (typeof S001_buildExportSVG !== 'function') return;
+  const cfg = getCfgS001();
+  const svgOut = S001_buildExportSVG(cfg, { part });
+
+  if (!svgOut || !svgOut.trim()) {
+    console.warn('[S001 part SVG export empty]', { part, cfg });
+    return;
+  }
+
+  const dim = `${cfg.W}x${cfg.D}x${cfg.H}`;
+  const name = `PacVu_S001_${label}_${dim}mm.svg`;
+  downloadFile(name, svgOut, 'image/svg+xml');
 }
 
 // ============================================================
@@ -504,8 +647,10 @@ function initBoxLibrarySelect() {
       const empty = document.createElement('option');
       empty.value = ''; empty.textContent = '준비 중';
       typeEl.appendChild(empty);
-      selectedBoxMeta = { categoryKey: cat.categoryKey, engineKey: '', variantKey: '' };
+      selectedBoxMeta = { categoryKey: cat.categoryKey, engineKey: '', variantKey: '', type: '' };
       updatePerforationSettings();
+      updateSSetPanelMode();
+      updateC001PanelMode();
       return;
     }
     cat.items.forEach(item => {
@@ -516,12 +661,13 @@ function initBoxLibrarySelect() {
       opt.dataset.variant    = item.variantKey;
       opt.dataset.fefco      = item.fefcoCode;
       opt.dataset.koreanName = item.koreanName;
+      opt.dataset.type       = item.type || '';
       opt.dataset.defaultW   = item.defaultDims?.W ?? 235;
       opt.dataset.defaultD   = item.defaultDims?.D ?? 229;
       opt.dataset.defaultH   = item.defaultDims?.H ?? 91;
       typeEl.appendChild(opt);
     });
-    _applySelectedBox(cat.items[0], typeEl.options[0]);
+    _applySelectedBox(cat.items[0], typeEl.options[0], cat);
   };
 
   categoryEl.addEventListener('change', () => { fillTypeSelect(); scheduleRender(); });
@@ -530,7 +676,8 @@ function initBoxLibrarySelect() {
     const item = BOX_LIBRARY
       .find(c => c.categoryKey === categoryEl.value)?.items
       .find(i => `${i.engineKey}:${i.variantKey}` === opt?.value);
-    if (item) _applySelectedBox(item, opt);
+    const cat = BOX_LIBRARY.find(c => c.categoryKey === categoryEl.value);
+    if (item) _applySelectedBox(item, opt, cat);
     scheduleRender();
   });
 
@@ -539,23 +686,32 @@ function initBoxLibrarySelect() {
   fillTypeSelect();
 }
 
-function _applySelectedBox(item, opt) {
+function _applySelectedBox(item, opt, cat) {
   selectedBoxMeta = {
-    categoryKey: '',
+    categoryKey: cat?.categoryKey || item.categoryKey || '',
     engineKey:   item.engineKey,
     variantKey:  item.variantKey,
     fefcoCode:   item.fefcoCode,
-    koreanName:  item.koreanName
+    koreanName:  item.koreanName,
+    type:        item.type || '',
+    defaultDims: item.defaultDims || null,
+    defaultPreset: item.defaultPreset || '',
+    defaultProductSize: item.defaultProductSize || null
   };
-  if (item.defaultDims) {
+  const defaults = isSSeriesSelection(selectedBoxMeta)
+    ? getSelectedProductDefaults(selectedBoxMeta)
+    : item.defaultDims;
+  if (defaults) {
     const dW = document.getElementById('baseW');
     const dD = document.getElementById('baseD');
     const dH = document.getElementById('panelH');
-    if (dW) dW.value = item.defaultDims.W;
-    if (dD) dD.value = item.defaultDims.D;
-    if (dH) dH.value = item.defaultDims.H;
+    if (dW) dW.value = defaults.W;
+    if (dD) dD.value = defaults.D;
+    if (dH) dH.value = defaults.H;
   }
   updatePerforationSettings();
+  updateSSetPanelMode();
+  updateC001PanelMode();
 }
 
 function legacySetupPanelUi() {
@@ -663,6 +819,278 @@ function updatePerforationSettings() {
   section.hidden = !hasVisible;
 }
 
+function getSizePanelGroup() {
+  return document.getElementById('baseW')?.closest('details.group') || null;
+}
+
+function setSizePanelMode(isSSet) {
+  const group = getSizePanelGroup();
+  if (!group) return;
+  const summary = group.querySelector(':scope > summary');
+  const labels = {
+    baseW: isSSet ? 'Outer W' : 'Width (W)',
+    baseD: isSSet ? 'Outer D' : 'Depth (D)',
+    panelH: isSSet ? 'Outer H' : 'Height (H)'
+  };
+
+  if (summary) {
+    summary.textContent = isSSet ? 'Outer Box Size' : '박스 기본 치수';
+  }
+
+  Object.keys(labels).forEach(id => {
+    const rowLabel = document.getElementById(id)?.closest('.row')?.querySelector('label');
+    if (rowLabel) rowLabel.textContent = labels[id];
+  });
+}
+
+function ensureSSetPanel() {
+  let panel = document.getElementById('sSeriesSetPanel');
+  if (panel) return panel;
+
+  const sidebarInner = document.querySelector('.sidebar-inner');
+  const sizePanel = getSizePanelGroup();
+  if (!sidebarInner || !sizePanel) return null;
+
+  panel = document.createElement('details');
+  panel.id = 'sSeriesSetPanel';
+  panel.className = 'group';
+  panel.open = true;
+  panel.hidden = true;
+  panel.innerHTML = [
+    '<summary>S-Series Set Control</summary>',
+    '<div class="group-body">',
+    '<div class="mini-title">S-Series Set Structure</div>',
+    '<p class="hint">S라인은 세트형 구조입니다.<br>제품 사이즈를 입력하면 인서트 패드, 속트레이, 겉슬리브가 자동 계산됩니다.</p>',
+
+    '<div class="mini-title">Set Parts / 구성 부품</div>',
+    '<div class="row"><label>Outer Sleeve</label><input type="checkbox" checked disabled></div>',
+    '<div class="row"><label>Inner Tray</label><input type="checkbox" checked disabled></div>',
+    '<div class="row"><label>Insert Pad</label><input id="sInsertPadEnabled" type="checkbox" checked></div>',
+
+    '<div class="mini-title">Clearance / 끼움 여유</div>',
+    '<div class="row"><label>Product → Pad</label><select id="sProductPadPreset"><option>Tight</option><option selected>Normal</option><option>Loose</option></select></div>',
+    '<div class="row"><label>Pad → Inner Tray</label><select id="sPadTrayPreset"><option>Tight</option><option selected>Normal</option><option>Loose</option></select></div>',
+    '<div class="row"><label>Inner Tray → Outer Sleeve</label><select id="sTraySleevePreset"><option>Tight</option><option selected>Normal</option><option>Loose</option></select></div>',
+    '<details class="sub-group">',
+    '<summary>Advanced Clearance</summary>',
+    '<div class="row"><label>Product Gap</label><input type="number" value="1.0" step="0.1" readonly></div>',
+    '<div class="row"><label>Pad Gap</label><input type="number" value="1.0" step="0.1" readonly></div>',
+    '<div class="row"><label>Tray Gap</label><input type="number" value="1.0" step="0.1" readonly></div>',
+    '<div class="row"><label>Slide Gap</label><input type="number" value="1.5" step="0.1" readonly></div>',
+    '<div class="row"><label>Paper Thickness</label><input type="number" value="0.4" step="0.1" readonly></div>',
+    '</details>',
+
+    '<div id="sOuterStringHoleSettings">',
+    '<div class="mini-title">Outer / String Hole Settings</div>',
+    '<div class="row"><label>Use String Hole</label><input id="sOuterStringHoleEnabled" type="checkbox" checked></div>',
+    '<div class="row"><label>Main Hole Dia</label><input id="sOuterMainHoleDia" type="number" step="0.5" value="22"></div>',
+    '<div class="row"><label>Small Hole Dia</label><input id="sOuterSmallHoleDia" type="number" step="0.5" value="6"></div>',
+    '<div class="row"><label>Y Offset</label><input id="sOuterHoleOffsetY" type="number" step="0.5" value="0"></div>',
+    '</div>',
+
+    '<div id="sInsertPadSettings">',
+    '<div class="mini-title">Insert / Pad Settings</div>',
+    '<div class="row"><label>Hole Type</label><input type="text" value="Circle" readonly></div>',
+    '<div class="row"><label>Hole Count</label><input type="text" value="3" readonly></div>',
+    '<div class="row"><label>Hole Gap</label><input type="text" value="Auto" readonly></div>',
+    '<div class="row"><label>Edge Margin</label><input type="text" value="Auto" readonly></div>',
+    '</div>',
+
+    '<div class="mini-title">Preview Parts</div>',
+    '<div class="row"><label>Show Outer Sleeve</label><input id="sShowOuterSleeve" type="checkbox" checked></div>',
+    '<div class="row"><label>Show Inner Tray</label><input id="sShowInnerTray" type="checkbox" checked></div>',
+    '<div class="row"><label>Show Insert Pad</label><input id="sShowInsertPad" type="checkbox" checked></div>',
+    '<div class="row"><label>View Mode</label><select id="sViewMode"><option selected>All Parts</option><option>Outer Only</option><option>Inner Only</option><option>Insert Only</option></select></div>',
+
+    '<div class="mini-title">Download Parts</div>',
+    '<div class="row"><label>Download All</label><button id="sDownloadAllSvg" type="button" class="btn light">SVG</button></div>',
+    '<div class="row"><label>Outer Sleeve</label><button id="sDownloadOuterSvg" type="button" class="btn light">SVG</button></div>',
+    '<div class="row"><label>Inner Tray</label><button id="sDownloadInnerSvg" type="button" class="btn light">SVG</button></div>',
+    '<div class="row"><label>Insert Pad</label><button id="sDownloadInsertSvg" type="button" class="btn light">SVG</button></div>',
+    '</div>'
+  ].join('');
+
+  sizePanel.insertAdjacentElement('afterend', panel);
+
+  const insertPad = panel.querySelector('#sInsertPadEnabled');
+  insertPad?.addEventListener('change', () => {
+    const settings = panel.querySelector('#sInsertPadSettings');
+    if (settings) settings.hidden = !insertPad.checked;
+    render(true);
+  });
+
+  panel.querySelectorAll('select, input[type=checkbox], input[type=number]').forEach(control => {
+    if (control.id !== 'sInsertPadEnabled') {
+      control.addEventListener('change', () => render(true));
+      control.addEventListener('input', () => render(true));
+    }
+  });
+
+  panel.querySelector('#sDownloadAllSvg')?.addEventListener('click', () => downloadS001PartSVG('all', 'All'));
+  panel.querySelector('#sDownloadOuterSvg')?.addEventListener('click', () => downloadS001PartSVG('outerSleeve', 'OuterSleeve'));
+  panel.querySelector('#sDownloadInnerSvg')?.addEventListener('click', () => downloadS001PartSVG('innerTray', 'InnerTray'));
+  panel.querySelector('#sDownloadInsertSvg')?.addEventListener('click', () => downloadS001PartSVG('insertPad', 'InsertPad'));
+
+  return panel;
+}
+
+function updateSSetPanelMode() {
+  const isSSet = isSSeriesSelection();
+  const panel = ensureSSetPanel();
+  setSizePanelMode(isSSet);
+  if (panel) panel.hidden = !isSSet;
+
+  if (isSSet) {
+    const defaults = getSelectedProductDefaults();
+    const dW = document.getElementById('baseW');
+    const dD = document.getElementById('baseD');
+    const dH = document.getElementById('panelH');
+    if (dW && !dW.value) dW.value = defaults.W;
+    if (dD && !dD.value) dD.value = defaults.D;
+    if (dH && !dH.value) dH.value = defaults.H;
+  }
+}
+
+function isC001Selection(meta = selectedBoxMeta) {
+  return meta?.engineKey === 'c001' && meta?.variantKey === 'C001';
+}
+
+function ensureC001Panel() {
+  let panel = document.getElementById('c001CakePanel');
+  if (panel) return panel;
+
+  const sizePanel = getSizePanelGroup();
+  if (!sizePanel) return null;
+  const options = typeof C001_getPresetOptions === 'function'
+    ? C001_getPresetOptions()
+    : [
+      { key: 'mini', label: 'Mini' },
+      { key: 'no1', label: 'No.1' },
+      { key: 'no2', label: 'No.2' },
+      { key: 'no3', label: 'No.3' },
+      { key: 'no4', label: 'No.4' }
+    ];
+
+  panel = document.createElement('details');
+  panel.id = 'c001CakePanel';
+  panel.className = 'group';
+  panel.open = true;
+  panel.hidden = true;
+  panel.innerHTML = [
+    '<summary>C001 Cake Box Control</summary>',
+    '<div class="group-body">',
+    '<div class="mini-title">Size Preset / \ud638\uc218 \uc120\ud0dd</div>',
+    '<div class="row"><label>Size Preset</label><select id="c001Preset">' +
+      options.map(opt => '<option value="' + opt.key + '">' + opt.label + '</option>').join('') +
+    '</select></div>',
+
+    '<div class="mini-title">Cake Board Size / \ucf00\uc774\ud06c \ud558\ud310</div>',
+    '<div class="row"><label>Board W</label><input id="c001BoardW" type="text" readonly></div>',
+    '<div class="row"><label>Board D</label><input id="c001BoardD" type="text" readonly></div>',
+    '<div class="row"><label>Board H</label><input id="c001BoardH" type="text" readonly></div>',
+
+    '<div class="mini-title">Box Size / \ubc15\uc2a4 \uc644\uc131 \uc0ac\uc774\uc988</div>',
+    '<div class="row"><label>Box W</label><input id="c001BoxW" type="text" readonly></div>',
+    '<div class="row"><label>Box D</label><input id="c001BoxD" type="text" readonly></div>',
+    '<div class="row"><label>Box H</label><input id="c001BoxH" type="text" readonly></div>',
+
+    '<div class="mini-title">Height Option / \ub192\uc774 \uc635\uc158</div>',
+    '<div class="row"><label>Height</label><select id="c001HeightOption"><option selected>Standard</option><option>Tall</option><option>2-Tier</option><option>Custom</option></select></div>',
+    '<div class="row" id="c001CustomHeightRow" hidden><label>Custom H</label><input id="c001CustomH" type="number" step="1" value="140"></div>',
+
+    '<div class="mini-title">Handle / \uc190\uc7a1\uc774</div>',
+    '<div class="row"><label>Handle</label><select id="c001Handle"><option selected>Center Handle</option></select></div>',
+
+    '<div class="mini-title">Window / \ucc3d\ubb38</div>',
+    '<div class="row"><label>Window</label><select id="c001Window"><option selected>None</option><option>Guide Only</option><option>Cutout</option></select></div>',
+    '</div>'
+  ].join('');
+
+  sizePanel.insertAdjacentElement('afterend', panel);
+
+  panel.querySelectorAll('select, input[type=number]').forEach(control => {
+    control.addEventListener('change', () => {
+      syncC001PanelFromPreset();
+      render(true);
+    });
+    control.addEventListener('input', () => {
+      syncC001PanelFromPreset();
+      render(true);
+    });
+  });
+
+  return panel;
+}
+
+function syncC001SizeFields(cfg) {
+  const dW = document.getElementById('baseW');
+  const dD = document.getElementById('baseD');
+  const dH = document.getElementById('panelH');
+  if (dW) dW.value = cfg.W;
+  if (dD) dD.value = cfg.D;
+  if (dH) dH.value = cfg.H;
+}
+
+function syncC001PanelDisplays(cfg) {
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+  };
+  setText('c001BoardW', cfg.boardW + ' mm');
+  setText('c001BoardD', cfg.boardD + ' mm');
+  setText('c001BoardH', cfg.boardH + ' mm');
+  setText('c001BoxW', cfg.W + ' mm');
+  setText('c001BoxD', cfg.D + ' mm');
+  setText('c001BoxH', cfg.H + ' mm');
+}
+
+function syncC001PanelFromPreset() {
+  const preset = document.getElementById('c001Preset')?.value || 'no3';
+  const heightOption = document.getElementById('c001HeightOption')?.value || 'Standard';
+  const customRow = document.getElementById('c001CustomHeightRow');
+  const customInput = document.getElementById('c001CustomH');
+  if (customRow) customRow.hidden = heightOption !== 'Custom';
+  const cfg = typeof C001_resolveConfig === 'function'
+    ? C001_resolveConfig({ preset, heightOption, customH: customInput?.value, windowMode: document.getElementById('c001Window')?.value })
+    : { W: 277, D: 275, H: 140, boardW: 265, boardD: 265, boardH: 5 };
+  if (customInput && heightOption !== 'Custom') customInput.value = cfg.H;
+  syncC001PanelDisplays(cfg);
+  syncC001SizeFields(cfg);
+  return cfg;
+}
+
+function setC001BaseReadonly(readonly) {
+  ['baseW', 'baseD', 'panelH'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.readOnly = !!readonly;
+  });
+}
+
+function updateC001PanelMode() {
+  const isC001 = isC001Selection();
+  const panel = ensureC001Panel();
+  if (panel) panel.hidden = !isC001;
+  setC001BaseReadonly(isC001);
+  if (!isC001) {
+    if (panel) panel.dataset.activeKey = '';
+    return;
+  }
+
+  const activeKey = selectedBoxMeta.engineKey + ':' + selectedBoxMeta.variantKey;
+  if (panel && panel.dataset.activeKey !== activeKey) {
+    const preset = document.getElementById('c001Preset');
+    const heightOption = document.getElementById('c001HeightOption');
+    const handle = document.getElementById('c001Handle');
+    const windowMode = document.getElementById('c001Window');
+    if (preset) preset.value = selectedBoxMeta.defaultPreset || 'no3';
+    if (heightOption) heightOption.value = 'Standard';
+    if (handle) handle.value = 'Center Handle';
+    if (windowMode) windowMode.value = 'None';
+    panel.dataset.activeKey = activeKey;
+  }
+  syncC001PanelFromPreset();
+}
+
 function setupPanelUi() {
   const optionGrid = document.querySelector('.option-grid');
   const displayBody = optionGrid?.closest('.group-body');
@@ -743,6 +1171,10 @@ function setupPanelUi() {
   ].join('');
 
   sidebarInner.insertBefore(section, hint || null);
+  ensureSSetPanel();
+  ensureC001Panel();
+  updateSSetPanelMode();
+  updateC001PanelMode();
   updateLegendUi();
 }
 
@@ -814,6 +1246,9 @@ function bindAll() {
       : eng === 'rbox2' ? getCfgR002()
       : eng === 'rbox3' ? getCfgR003()
       : eng === 'rbox4' ? getCfgR004()
+      : eng === 'sSeries' && selectedBoxMeta.variantKey === 'S001' ? getCfgS001()
+      : eng === 'b001' ? getCfgB001()
+      : eng === 'c001' ? getCfgC001()
       : getCfg();
 
     const dim  = `${cfg.W}x${cfg.D}x${cfg.H}`;
@@ -840,6 +1275,9 @@ function bindAll() {
       : eng === 'rbox2' ? getCfgR002()
       : eng === 'rbox3' ? getCfgR003()
       : eng === 'rbox4' ? getCfgR004()
+      : eng === 'sSeries' && selectedBoxMeta.variantKey === 'S001' ? getCfgS001()
+      : eng === 'b001' ? getCfgB001()
+      : eng === 'c001' ? getCfgC001()
       : getCfg();
 
     const dim  = `${cfg.W}x${cfg.D}x${cfg.H}`;
@@ -852,6 +1290,35 @@ function bindAll() {
     }
 
     downloadFile(name, dxfOut, 'application/dxf');
+  });
+
+  get('downloadPdfBtn')?.addEventListener('click', () => {
+    const eng = selectedBoxMeta.engineKey;
+    const cfg = eng === 'gbox' ? getCfg()
+      : eng === 'gbox2' ? getCfgM002()
+      : eng === 'bbox' ? getCfgT001()
+      : eng === 'bbox2' ? getCfgT002()
+      : eng === 'bbox3' ? getCfgT003()
+      : eng === 'bbox4' ? getCfgT004()
+      : eng === 'rbox' ? getCfgR001()
+      : eng === 'rbox2' ? getCfgR002()
+      : eng === 'rbox3' ? getCfgR003()
+      : eng === 'rbox4' ? getCfgR004()
+      : eng === 'sSeries' && selectedBoxMeta.variantKey === 'S001' ? getCfgS001()
+      : eng === 'b001' ? getCfgB001()
+      : eng === 'c001' ? getCfgC001()
+      : getCfg();
+
+    const dim  = `${cfg.W}x${cfg.D}x${cfg.H}`;
+    const name = `PacVu_${eng}_${dim}mm.pdf`;
+    const pdfOut = buildPDF(cfg, eng);
+
+    if (!pdfOut || !pdfOut.trim()) {
+      console.warn('[PDF export empty]', { eng, cfg });
+      return;
+    }
+
+    downloadFile(name, pdfOut, 'application/pdf');
   });
 
   const sidebar = get('sidebar');
